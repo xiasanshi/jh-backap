@@ -1,0 +1,286 @@
+html{
+  padding: 0;
+  margin: 0;
+  top:0;
+}
+.bg_groupon {
+    /*background-color: #20b6f9;*/
+    background-color: #26a2ff
+}
+
+.color_#26a2ff {
+    color: #26a2ff;
+}
+
+.bg_#26a2ff {
+    background-color: #26a2ff;
+}
+
+.bg_red {
+    background-color: #ff0000;
+}
+
+.bg_f0 {
+    background-color: #F0F0F0;
+}
+
+.bg_ff {
+    background-color: #ffffff;
+}
+
+.bg_eef {
+    background-color: #EEFCEE
+}
+
+.bg_EBFFFF {
+    /*background-color: #EBFFFF;*/
+    background-color: #FFF3E7;
+}
+
+.bg_FEF {
+    background-color: #FEF0F0
+}
+
+.bg_FFF7EF {
+    background-color: #FFE5CB;
+}
+
+.color_groupon {
+    color: #ff9933;
+}
+
+.color_fanzone {
+    color: #20b6f9;
+}
+
+.color_red {
+    color: #ff0000;
+}
+
+.color_fff {
+    color: #ffffff;
+}
+
+.color_333 {
+    color: #333333;
+}
+
+.color_666 {
+    color: #666666;
+}
+
+.color_999 {
+    color: #999999;
+}
+
+.color_ccc {
+    color: #cccccc;
+}
+
+.text_align_center {
+    text-align: center;
+}
+
+.margin_auto_0 {
+    margin: auto 0;
+}
+
+.margin_0_auto {
+    margin: 0 auto;
+}
+
+.padding_0 {
+    padding: 0;
+}
+
+.padding_15 {
+    padding: 15px;
+}
+
+.padding_LR_15 {
+    padding: 0 15px;
+}
+
+.padding_LR_10 {
+    padding: 0 10px;
+}
+
+.margin_top_15 {
+    margin-top: 15px;
+}
+
+.margin_top_10 {
+    margin-top: 10px;
+}
+.margin_top_5{
+    margin-top: 5px;
+}
+.float_left {
+    float: left;
+}
+
+.position_ab {
+    position: absolute;
+}
+
+.position_re {
+    position: relative;
+}
+
+.position_fix {
+    position: fixed;
+}
+
+.bottom_0 {
+    bottom: 0;
+}
+
+.top_0 {
+    top: 0;
+}
+
+height_40 {
+    height: 40px;
+}
+
+.height_50 {
+    height: 50px;
+}
+
+.width_100 {
+    width: 100%;
+}
+
+.height_100 {
+    height: 100%;
+}
+
+.border_top2 {
+    border-top: #cccccc 2px;
+}
+
+.fontsize_12 {
+    font-size: 12px;
+}
+
+.fontsize_14 {
+    font-size: 14px;
+}
+
+.fontsize_16 {
+    font-size: 16px;
+}
+
+.fontsize_18 {
+    font-size: 18px;
+}
+
+.icon_common {
+    font-size: 40px;
+    color: #20b6f9;
+}
+
+
+/*common*/
+input,
+textarea,
+select,
+img {
+    outline: none
+}
+
+
+/*iphone 默认样式*/
+
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    -webkit-appearance: none;
+}
+
+textarea {
+    -webkit-appearance: none;
+}
+
+.row:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+[class*="col-"] {
+    float: left;
+    padding: 0px;
+    border: 0px solid rgba(232, 232, 232, 0.1);
+}
+
+.col-1 {
+    width: 8.33%;
+}
+
+.col-2 {
+    width: 16.66%;
+}
+
+.col-3 {
+    width: 25%;
+}
+
+.col-4 {
+    width: 33.33%;
+}
+
+.col-5 {
+    width: 41.66%;
+}
+
+.col-6 {
+    width: 50%;
+}
+
+.col-7 {
+    width: 58.33%;
+}
+
+.col-8 {
+    width: 66.66%;
+}
+
+.col-9 {
+    width: 75%;
+}
+
+.col-10 {
+    width: 83.33%;
+}
+
+.col-11 {
+    width: 91.66%;
+}
+
+.col-12 {
+    width: 100%;
+}
+
+.overflow-hide{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-height:20px
+}
+
+.overflow-hide1{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    /*max-height:20px*/
+}
+
+.coupon-img{
+    height: 70px;
+    width: 70px;
+}
+.buss-img{
+    height: 100px;
+    width: 100px;
+}
