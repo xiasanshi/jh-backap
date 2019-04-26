@@ -28,13 +28,13 @@
         <!--<i slot="icon" class="icon iconfont">&#xe64f;</i>-->
         <div style="margin-top: 5px" class="name">新订单</div>
       </mt-tab-item>
-      <!--<mt-tab-item id="personal" class="padding_0" style="padding: 0">
-          &lt;!&ndash;<img slot="icon" :src="formatSrc('customer')" width="24" height="24">&ndash;&gt;
-          &lt;!&ndash;订单&ndash;&gt;
+      <mt-tab-item id="personal" class="padding_0" style="padding: 0">
+          <!--<img slot="icon" :src="formatSrc('customer')" width="24" height="24">-->
+          <!--订单-->
           <span class="icon iconfont icon-geren" style="width: 100%;font-size: 30px"></span>
-          &lt;!&ndash;<i slot="icon" class="icon iconfont">&#xe64f;</i>&ndash;&gt;
+          <!--<i slot="icon" class="icon iconfont">&#xe64f;</i>-->
           <div style="margin-top: 5px" class="name">我的</div>
-      </mt-tab-item>-->
+      </mt-tab-item>
     </mt-navbar>
 
   </div>
@@ -70,7 +70,7 @@ export default {
     selected: function (newp, oldp) {
       // alert('watch:'+newp)
       if (newp === 'order') {
-        this.$router.push({name: 'order'})
+        this.$router.push({name: 'order', path: '/order', params: {'status': 'wait'}})
         this.t = 0
       } else if (newp === 'personal') {
         this.$router.push({name: 'personal'})

@@ -2,7 +2,8 @@
   <transition name="fade">
     <div class="login color_fanzone">
       <div class="head">
-        <i class="icon-wangyi icon"></i>
+        <!--<i class="icon-wangyi icon"></i>-->
+        <img src="../assets/logo.png" style="width: 100px;height: 100%;margin-top: 100px"/>
         <p class="title">聚汇商家</p>
         <p class="listen">&nbsp;做自己的平台！</p>
       </div>
@@ -128,7 +129,7 @@ export default{
         margin: 0 auto 15px;
       }
       .submit{
-        width: 230px;
+        /*width: 230px;*/
         height:28px;
         font-size:16px;
         color: #333;

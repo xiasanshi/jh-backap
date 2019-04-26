@@ -193,10 +193,44 @@ export class Provider {
 
 export class MiniApp {
   // url = 'http://10.168.23.140:8080/order/getOrders1?page=0&rows=10'
-  url = 'https://diancan.qingzhao.net.cn/diancanrs/'
+  // url = 'https://diancan.qingzhao.net.cn/diancanrs/'
+  // test = 'http://192.168.0.106:8080/sellFruit'
+  constructor (url) {
+    this.url = url
+  }
   getOrders (params) {
     // alert(JSON.stringify(params))
-    return axios.get(`${this.url}/order/getOrders1`, params)
+    return axios.get(`https://diancan.qingzhao.net.cn/diancanrs/order/getOrders1`, params)
     // return axios.get('http://10.168.23.140:8085/order/getOrders1?page=0&rows=10')
+  }
+  createClassfy (params) {
+    return axios.put(`${this.url}/api/category`, params)
+  }
+  getClassfies (params) {
+    return axios.post(`${this.url}/api/category`, params)
+  }
+  delClassfies (params) {
+    return axios.post(`${this.url}/api/category/${params.id}`, params)
+  }
+  updateClassfies (params) {
+    return axios.post(`${this.url}/api/category/${params.id}`, params)
+  }
+  createPruduct (params) {
+    return axios.put(`${this.url}/api/product`, params)
+  }
+  getPruducts (params) {
+    return axios.post(`${this.url}/api/product/list`, params)
+  }
+  getPruductDetail (params) {
+    return axios.post(`${this.url}/api/product/${params.id}`, params)
+  }
+  getShopInfo (params) {
+    return axios.post(`${this.url}/api/shop/${params.id}`, params)
+  }
+  updateShopInfo (params) {
+    return axios.post(`${this.url}/api/shop/update`, params)
+  }
+  saveImage (params) {
+    return axios.post(`${this.url}/api/image/saveImage`, params, {headers: {'Content-Type': 'multipart/form-data'}})
   }
 }

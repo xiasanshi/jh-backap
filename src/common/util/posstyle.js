@@ -1,4 +1,4 @@
-// let pos = {}
+import {Toast} from 'mint-ui'
 export const bold = (writer, flag) => {
   if (flag) {
     writer.write(0x1B)
@@ -49,11 +49,25 @@ export const feedAndCut = (writer) => {
   writer.write(0)
   writer.flush()
 }
+
 // export default pos
 export class PosMachine {
   constructor (ipAddr, port) {
+    let u = navigator.userAgent
+    let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+    let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+    if (ipAddr && port && (isAndroid | isiOS)) {
+      this.connect(ipAddr, port)
+    } else {
+      Toast('web端')
+      console.log('打印机等待链接')
+    }
+  }
+
+  connect (ipAddr, port) {
     if (plus.os.name == 'Android') {
       var Socket = plus.android.importClass('java.net.Socket')
+      var InetSocketAddress = plus.android.importClass('java.net.InetSocketAddress')
       var PrintWriter = plus.android.importClass('java.io.PrintWriter')
       var BufferedWriter = plus.android.importClass('java.io.BufferedWriter')
       var OutputStreamWriter = plus.android.importClass('java.io.OutputStreamWriter')
@@ -65,13 +79,25 @@ export class PosMachine {
         var policy = new StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
       }
-      var socket = new Socket(ipAddr, port)
-
-      var outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), 'gbk')
-      var bufferWriter = new BufferedWriter(outputStreamWriter)
-      this.posMaWriter = new PrintWriter(bufferWriter, true)
+      var socket = null
+      this.posMaWriter = null
+      try {
+        // socket = new Socket(ipAddr, port)
+        socket = new Socket()
+        var ipc = new InetSocketAddress(ipAddr, port)
+        console.log('ssssssssssssssss')
+        socket.connect(ipc, 1000)
+        console.log('ssssssssssssssss')
+        var outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), 'gbk')
+        var bufferWriter = new BufferedWriter(outputStreamWriter)
+        this.posMaWriter = new PrintWriter(bufferWriter, true)
+      } catch (e) {
+        console.log(`链接超时：${ipAddr}:${port}`)
+        socket = null
+      }
     }
   }
+
   setBold (flag) {
     if (flag) {
       this.posMaWriter.write(0x1B)
@@ -96,6 +122,7 @@ export class PosMachine {
     this.posMaWriter.write(97)
     this.posMaWriter.write(position)
   }
+
   /**
    * 字体大小
    *
@@ -108,6 +135,7 @@ export class PosMachine {
     this.posMaWriter.write(33)
     this.posMaWriter.write(size)
   }
+
   /**
    * 进纸并全部切割
    *
@@ -121,6 +149,7 @@ export class PosMachine {
     this.posMaWriter.write(0)
     this.posMaWriter.flush()
   }
+
   getPosHandle () {
     return this.posMaWriter
   }
