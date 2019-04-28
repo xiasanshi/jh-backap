@@ -30,14 +30,21 @@
             <div>合计: ￥{{item.repaymentAmount}}</div>
             <div>地址: {{item.address.address}}</div>
             <div>联系人: {{item.address.name}}</div>
-            <div>联系电话: <a v-bind:href="'tel:'+item.address.mobile" style="text-decoration: None">{{item.address.mobile}}</a></div>
+            <div>联系电话: <a v-bind:href="'tel:'+item.address.mobile"
+                          style="text-decoration: None">{{item.address.mobile}}</a></div>
           </div>
         </div>
         <div class="">
           <div style="border-top: #999999 1px dashed;width: 100%" class="padding10"></div>
-          <mt-button :disabled="status !== 'wait'" type="primary" size="small" @click="orderRecive(this, item)">接单</mt-button>
-          <mt-button :disabled="status !== 'noShipping'" type="primary" size="small" @click="send2dada(this, item)">发送达达</mt-button>
-          <mt-button type="danger" :disabled="status !== 'wait'" size="small" @click="refuseOrder(this, item)">拒绝</mt-button>
+          <mt-button :disabled="status !== 'wait'" type="primary" size="small" @click="orderRecive(this, item)">接单
+          </mt-button>
+          <mt-button :disabled="status !== 'noShipping'" type="primary" size="small" @click="send2dada(this, item)">
+            发送达达
+          </mt-button>
+          <mt-button type="danger" :disabled="status !== 'wait'" size="small" @click="refuseOrder(this, item)">拒绝
+          </mt-button>
+          <mt-button type="primary" size="small" @click="posOrder(this, item)">打印订单
+          </mt-button>
           <!--<mt-button disabled="true"></mt-button>-->
         </div>
         <div class="position_absolute" style="right: 0;height: 100px;bottom: 4px" v-if="status==='complete'">
@@ -51,8 +58,13 @@
 <script>
   import {PosMachine} from '../../common/util/posstyle'
   import {Toast, Indicator} from 'mint-ui'
-  import {MiniApp} from '../../api/api'
 
+  Array.prototype.remove = function (val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+      this.splice(index, 1);
+    }
+  };
   export default {
     name: 'order',
     data() {
@@ -86,7 +98,7 @@
     methods: {
       sendMess2Pos() {
         // this.pos_flag = true
-        if(this.pos===null | this.writer === null){
+        if (this.pos === null | this.writer === null) {
           Toast('打印链接失败，请检查。')
           this.pos_flag = false
           return
@@ -122,78 +134,60 @@
         this.pos.feedAndCut()
         // pos = null
         // writer = null
+        // this.data.remove(data)
+        Toast('打印成功')
         this.pos_flag = false
 
       },
-      orderRecive(self, data) {
-        if(this.pos === null){
+      posOrder(self, data) {
+        if (this.pos === null) {
           Toast('打印链接失败，请检查。')
         }
-        this.updaterOrder(data,'noShipping')
+        this.updaterOrder(data, 'noShipping')
         if (!this.pos_flag) {
           this.pos_flag = true
           this.post_list.push(data)
-          this.sendMess2Pos()
         } else {
           this.post_list.push(data)
           console.log('post data: ' + JSON.stringify(this.post_list))
           return true
         }
-
+      },
+      orderRecive(self, data) {
+        this.updaterOrder(data, 'noShipping')
+        this.posOrder(self, data)
       },
       refuseOrder(self, data) {
         Toast('取消订单成功')
       },
       send2dada(self, data) {
-        Toast('发送消息到达达成功')
-      },
-      getData() {
-        Indicator.open('加载中...')
-        let para = {'shopId': this.shopId, 'status': 100}
-        // let miniapp = new MiniApp()
-        console.log(JSON.stringify(para))
-        // debugger
-        this.$api.getAll(para).then((res) => {
-          if (res.data.status === '2000') {
-            // if(res.data)
-            // console.log(JSON.stringify(res.data.rows))
-            this.data = res.data.data
-            Indicator.close()
-          } else {
-            Toast(res.data.msg)
-            Indicator.close()
-          }
-          console.log("====================")
-          console.log(JSON.stringify(this.data))
-        })
-        Indicator.close()
+        this.updaterOrder(data, 'alreadyShipping')
       },
       async connect(ip, port) {
         let self = this
         self.$pos = new PosMachine(ip, parseInt(port))
         self.writer = self.$pos.getPosHandle()
-          // resolve(pos)
-        },
-      updaterOrder(item,status){
+        // resolve(pos)
+      },
+      updaterOrder(item, status = 'noShipping') {
         Indicator.open('加载中...')
         let para = {}
-        para['shippingStatus'] = 'noShipping'
+        para['shippingStatus'] = status
         para['addressId'] = item.address.id
         para['id'] = item.id
         para['shopId'] = item.shop.id
         para['orderDetail'] = item.orderDetails
-        // para['orderStatus'] = 'noShipping'
-        // let miniapp = new MiniApp()
         console.log(JSON.stringify(para))
-        // debugger
         this.$api.connect('order')
         this.$api.create(para).then((res) => {
           if (res.data.code === '2000') {
             // if(res.data)
             console.log(JSON.stringify(res.data))
             // this.data = res.data.data.orders
-            Toast('接单成功')
+            let msg = status == 'noShipping' ? '接单成功' : status == 'alreadyShipping' ? '发货成功' : '修改订单状态成功'
+            Toast(msg)
             Indicator.close()
+            this.data.remove(item)
           } else {
             Toast(res.msg)
             Indicator.close()
@@ -201,59 +195,54 @@
         })
         Indicator.close()
       },
-      getOrderByStatus (status) {
+      getOrderByStatus(status) {
         Indicator.open('加载中...')
         let para = {'shopId': this.$shopId, 'shippingStatus': status, 'orderStatus': 'complete'}
-        // let miniapp = new MiniApp()
         console.log(JSON.stringify(para))
         // debugger
         this.$api.connect('order')
         this.$api.getAll(para).then((res) => {
           if (res.data.code === '2000') {
-            // if(res.data)
-            // console.log(JSON.stringify(res.data.rows))
             this.data = res.data.data.orders
+            // debugger
             Indicator.close()
           } else {
             Toast(res.msg)
             Indicator.close()
           }
-          console.log('==================')
-          console.log(JSON.stringify(this.data))
+          // console.log('==================')
+          // console.log(JSON.stringify(this.data))
         })
         Indicator.close()
       },
-      formatTitle(){
-        self.title = this.status === 'complete' ? '已完成订单' : this.status === 'noShipping' ? '待发货订单' : this.status === 'alreadyShipping' ? '已发货订单' :  this.status === 'wait' ? '待处理订单' : '订单'
+      formatTitle() {
+        self.title = this.status === 'complete' ? '已完成订单' : this.status === 'noShipping' ? '待发货订单' : this.status === 'alreadyShipping' ? '已发货订单' : this.status === 'wait' ? '待处理订单' : '订单'
       }
     },
-    updated(){
+    updated() {
+      // console.log(this.$route.params.status)
       try {
         let ip = localStorage.getItem('posIp')
         let port = localStorage.getItem('posPort')
-        if(this.$pos && this.$pos.getPosHandle()!==null){
+        if (this.$pos && this.$pos.getPosHandle() !== null) {
           this.pos = this.$pos
           this.writer = this.pos.getPosHandle()
-        }else{
+        } else {
           this.connect(ip, port)
         }
-        // this.pos = new PosMachine(ip, parseInt(port))
-        // // let pos = new PosMachine('192.168.43.100', 9100)
-        // console.log(`connect to pos(${ip}:${port})`)
-        // this.writer = this.pos.getPosHandle()
       } catch (e) {
         Toast('链接打印机失败,请检查')
         console.log('链接打印机失败：' + e)
       }
     },
     mounted() {
-      // this.getData()
       this.status = this.$route.params.status
+      // debugger
       console.log(this.$route.params)
       this.getOrderByStatus(this.status)
+      // debugger
       this.formatTitle()
       // console.log(`send message to pos(${ip}:${port}):` + JSON.stringify(data))
-      this.miniapp = new MiniApp()
     },
     watch: {
       pos_flag(newp, oldp) {

@@ -38,7 +38,7 @@
       </nav>
     </div>
     <div style="margin-top: 5px">
-      <mt-cell title="待发货订单" :to="{name:'order',path:'/order',params:{'status': 'noShipping'}}" is-link>
+      <mt-cell title="待发货订单" :to="{name:'order', path:'/order',params:{'status': 'noShipping'}}" is-link>
         <mt-badge v-if="pre_send>0" type="warning" size="small" >{{pre_send}}</mt-badge>
       </mt-cell>
       <mt-cell title="待完成订单" :to="{name:'order',path:'/order',params:{'status': 'alreadyShipping'}}" is-link>
@@ -73,6 +73,7 @@
 <script>
 import {Toast, Indicator} from 'mint-ui'
 import {PosMachine} from '../common/util/posstyle'
+import {JHWebSocket} from '../store/websocket'
 
 export default {
   name: 'index',
@@ -148,9 +149,11 @@ export default {
     }
   },
   updated () {
+    let w = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket')
+    // w.reloadsocket()
   },
   created () {
-    // this.$websocket.reloadsocket('ws://pay.qingzhao.net.cn/fanZone/webSocket')
+    // this.$websocket.reloadsocket()
   },
   filters: {
     is_connect (val) {

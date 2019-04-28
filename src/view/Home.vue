@@ -6,16 +6,16 @@
       </transition>
     </div>
     <div style="height: 60px">
-      <Footer ref="footer"></Footer>
+      <Jhfooter ref="footer"></Jhfooter>
     </div>
   </div>
 </template>
 
 <script>
-import Footer from '../components/foot'
-
+import Jhfooter from '../components/jhfoot'
+// import {JHWebSocket} from '../store/websocket'
 export default {
-  components: {Footer},
+  components: {Jhfooter},
   data () {
     return {
       sysName: 'FanZone',
@@ -56,7 +56,11 @@ export default {
       }
       // let param = name ? name : 'Fanzone'
       // alert(name)
-      this.$refs.footer.setSelected(name)
+      if (name === 'order' && this.$route.params.status && this.$route.params.status !== 'wait') {
+        console.log('unknow order')
+      } else {
+        this.$refs.footer.setSelected(name)
+      }
     }
   },
   mounted () {
@@ -66,29 +70,8 @@ export default {
     this.toFooter()
     // wxjs.wx_share('聚汇', '', location.href)
     // this.$router.push({ name: 'index'});
-  },
-  events: {
-    changed (msg) {
-      console.log('Something changed: ' + msg)
-    },
-    connect () {
-      console.log('Websocket connected to ' + this.$socket.nsp)
-    },
-    disconnect () {
-      console.log('Websocket disconnected from ' + this.$socket.nsp)
-    },
-    error (err) {
-      console.error('Websocket error!', err)
-    }
-  },
-  watch: {
-    websocket (newp, oldp) {
-      if (newp === 'closed') {
-        // websocket.reload('ws://pay.qingzhao.net.cn/fanZone/webSocket')
-      } else {
-        console.log('websocket: 异常了')
-      }
-    }
+    // this.$websocket = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket') // websocket
+    // this.$websocket = new JHWebSocket('ws://192.168.43.216:8082/fanZone/webSocket') // websocket
   }
 
 }

@@ -10,7 +10,7 @@ import './common/util/common.css'
 import './assets/scss/iconfont/iconfont.css'
 // import 'assets/scss/iconfont/iconfont.css'
 import VueWechatTitle from 'vue-wechat-title'
-import {JHWebSocket} from './store/websocket'
+// import {JHWebSocket} from './store/websocket'
 import {MiniApp} from './api/api'
 import {Api} from './api/index'
 // import {PosMachine} from './common/util/posstyle'
@@ -24,7 +24,6 @@ Vue.use(VueRouter)
 Vue.config.debug = true
 Vue.config.productionTip = true
 localStorage.setItem('bussnessId', '19b97965dd4e4495a0e741abf9372a83')
-Vue.prototype.$websocket = new JHWebSocket('ws://pintuan.fanzone.vip/fanZone/webSocket') // websocket
 // 链接打印机
 // let ips = localStorage.getItem('posIp')
 // let ports = localStorage.getItem('posPort')
@@ -33,7 +32,7 @@ Vue.prototype.$pos = false
 let url = 'https://diancan.qingzhao.net.cn/diancanrs/'
 Vue.prototype.$api = new Api(url)
 Vue.prototype.$miniapi = new MiniApp(url)
-Vue.prototype.$shopId = '14'
+Vue.prototype.$shopId = '1'
 Vue.prototype.$brandId = '2'
 router.beforeEach((to, from, next) => {
   console.log('main:' + next.name)
@@ -46,6 +45,8 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+// Vue.prototype.$websocket = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket') // websocket
+// Vue.prototype.$websocket = new JHWebSocket('ws://192.168.43.216:8082/fanZone/webSocket') // websocket
 /* eslint-disable no-new */
 new Vue({
   router,

@@ -43,7 +43,7 @@
 <script>
 
 export default {
-  name: 'footer',
+  name: 'jhfoot',
   props: ['pageType'],
   data () {
     return {
@@ -70,6 +70,9 @@ export default {
     selected: function (newp, oldp) {
       // alert('watch:'+newp)
       if (newp === 'order') {
+        if (this.$route.params.status && this.$route.params.status !== 'wait') {
+          return
+        }
         this.$router.push({name: 'order', path: '/order', params: {'status': 'wait'}})
         this.t = 0
       } else if (newp === 'personal') {
