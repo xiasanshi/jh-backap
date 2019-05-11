@@ -60,9 +60,9 @@ export default {
         'description': '',
         'icon': '',
         'unit': 'kg',
-        'shopId': this.$shopId,
+        'shopId': '',
         'stock': 9999999,
-        'brandId': this.$brandId,
+        'brandId': '',
         'galleryList': []
       },
       slots: [{
@@ -141,6 +141,9 @@ export default {
     }
   },
   mounted () {
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
     this.getClassfies()
   },
   created () {

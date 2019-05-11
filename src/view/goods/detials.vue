@@ -48,8 +48,8 @@ export default {
   data () {
     return {
       goodId: '',
-      shopId: this.$shopId,
-      brandId: this.$brandId,
+      shopId: '',
+      brandId: '',
       data: {
         'name': '芒果',
         'price': 10,
@@ -155,6 +155,9 @@ export default {
     }
   },
   mounted () {
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
     this.goodId = this.$route.params.id
     this.getPruduct()
   },

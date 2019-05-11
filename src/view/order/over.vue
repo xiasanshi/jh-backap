@@ -68,13 +68,14 @@ export default {
       }],
       post_list: [],
       pos_flag: false,
-      status: ''
+      status: '',
+      shopId:''
     }
   },
   methods: {
     getOrderByStatus (status) {
       Indicator.open('加载中...')
-      let para = {'shopId': this.$shopId, 'shippingStatus': status}
+      let para = {'shopId': this.shopId, 'shippingStatus': status}
       // let miniapp = new MiniApp()
       console.log(JSON.stringify(para))
       // debugger
@@ -97,6 +98,9 @@ export default {
   watch: {
   },
   mounted () {
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
     this.status = this.$route.params.status
     console.log(this.$route.params)
     this.getOrderByStatus(this.status)

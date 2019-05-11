@@ -58,8 +58,8 @@ export default {
       pos_ip: '',
       isWorking: '休息中',
       pos_port: '',
-      shopId: this.$shopId,
-      brandId: this.$brandId,
+      shopId: '',
+      brandId: '',
       shop_info: {},
       api: this.$api
     }
@@ -122,6 +122,9 @@ export default {
   },
   mounted () {
     // this.testSocket()
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
     if (localStorage.getItem('posIp')) {
       this.pos_ip = localStorage.getItem('posIp')
     } else {

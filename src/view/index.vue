@@ -131,6 +131,7 @@ export default {
   },
   mounted () {
     // this.testSocket()
+    console.log(this.$store.state.shopId)
     if (localStorage.getItem('posIp')) {
       this.pos_ip = localStorage.getItem('posIp')
     } else {

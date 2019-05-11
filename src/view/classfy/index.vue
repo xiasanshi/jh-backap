@@ -47,8 +47,8 @@ export default {
         'type': '',
         'description': '',
         'code': '',
-        'shopId': this.$shopId,
-        'brandId': this.$brandId
+        'shopId': '',
+        'brandId': ''
       },
       popupVisible: false,
       classfies: {},
@@ -105,7 +105,7 @@ export default {
       Indicator.open()
       this.api.connect('category')
       let param = {'shopId': this.data.shopId, 'id': this.data.shopId}
-      this.api.getDetail(param).then(res => {
+      this.api.getAll(param).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
           this.classfies = res.data.data
@@ -127,6 +127,10 @@ export default {
     }
   },
   mounted () {
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    console.log(sessionStorage.getItem('shopInfo'))
+    this.data.shopId = shopInfo.shopId
+    this.data.brandId = shopInfo.brandId
     this.getClassfies()
   },
   created () {

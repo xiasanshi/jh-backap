@@ -61,8 +61,8 @@ export default {
   },
   data () {
     return {
-      'shopId': this.$shopId,
-      'brandId': this.$brandId,
+      'shopId': '',
+      'brandId': '',
       data: {},
       open_time: '',
       close_time: '',
@@ -162,6 +162,9 @@ export default {
     }
   },
   mounted () {
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
     this.shopInfo()
   },
   created () {

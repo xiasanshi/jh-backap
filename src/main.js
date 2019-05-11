@@ -32,16 +32,19 @@ Vue.prototype.$pos = false
 let url = 'https://diancan.qingzhao.net.cn/diancanrs/'
 Vue.prototype.$api = new Api(url)
 Vue.prototype.$miniapi = new MiniApp(url)
-Vue.prototype.$shopId = '1'
-Vue.prototype.$brandId = '2'
+// Vue.prototype.$shopId = '1'
+// Vue.prototype.$brandId = '2'
 router.beforeEach((to, from, next) => {
   console.log('main:' + next.name)
   if (to.path === '/login') {
-    sessionStorage.removeItem('user')
+    sessionStorage.removeItem('shopInfo')
   }
-  if (!sessionStorage.getItem('user') && to.path !== '/login') {
+  if (!sessionStorage.getItem('shopInfo') && to.path !== '/login') {
     next({path: '/login'})
   } else {
+    // let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    // this.$shopId = shopInfo.shopId
+    // Vue.prototype.$shopId = shopInfo.shopId
     next()
   }
 })

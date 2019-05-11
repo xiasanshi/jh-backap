@@ -7,16 +7,12 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-
+    shopId: ''
   },
-  getters: {
-
-  },
+  getters: {},
   mutations: {
-
   },
   actions: {
-
   },
   modules: {
     sideBar: Sidebar,

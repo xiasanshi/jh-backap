@@ -13,28 +13,21 @@
         <p class="submit color_fanzone" @click="login">登录</p>
       </div>
       <!-- loading -->
-      <loading v-if="isLoading"></loading>
+      <!--<loading v-if="isLoading"></loading>-->
     </div>
   </transition>
 </template>
 
 <script>
-import Vue from 'vue'
-import axios from 'axios'
-import store from '../store'
-import {requestLogin} from '../api/api'
+// import store from '../store'
+import {requestLogin} from '../api/index'
 import {Indicator, Toast} from 'mint-ui'
-Vue.use(axios)
+
 export default{
   data () {
     return {
-      phone: '13767015490',
-      password: 'fanZone'
-    }
-  },
-  computed: {
-    isLoading () {
-      return store.getters.getIsLoading
+      phone: 'admin',
+      password: 'admin@2019'
     }
   },
   methods: {
@@ -50,17 +43,19 @@ export default{
       // 一般要跟后端了解密码的加密规则
       // 需要想后端发送的登录参数
       let loginParam = {
-        bussinessPhone: this.phone,
-        bussinessPassword: this.password
+        userName: this.phone,
+        password: this.password
       }
 
       Indicator.open('加载中...')
       // 请求后端,比如:
       requestLogin(loginParam).then((res) => {
-        if (res.data.code === 0) {
-          sessionStorage.setItem('user', res.data.data)
+        if (res.data.code === '2000') {
+          sessionStorage.setItem('shopInfo', JSON.stringify(res.data.data))
+          // this.$store.actions.setShopId(res.data.data.shopId)
+          console.log('xx')
           Indicator.close()
-          this.$router.push({ path: '/index' })
+          this.$router.push({path: '/index'})
         } else {
           Indicator.close()
           Toast(res.data.msg)

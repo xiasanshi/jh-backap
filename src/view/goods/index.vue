@@ -51,9 +51,9 @@ export default {
         'tag': '泰国芒果',
         'description': '亟待解决的破口空泡空',
         'icon': '',
-        'shopId': this.$shopId,
+        'shopId': '',
         'stock': 9999999,
-        'brandId': this.$brandId
+        'brandId': ''
       },
       categoryId: 1,
       pruducts: [],
@@ -135,8 +135,10 @@ export default {
     }
   },
   mounted () {
+    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
     this.getClassfies()
-
   },
   created () {
     // this.api = this.$api.connect('product')

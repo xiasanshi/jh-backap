@@ -90,7 +90,7 @@
         pos: null,
         writer: null,
         miniapp: null,
-        shopId: this.shopId,
+        shopId: '',
         status: '',
         title: '订单'
       }
@@ -236,6 +236,9 @@
       }
     },
     mounted() {
+      let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+      this.shopId = shopInfo.shopId
+      this.brandId = shopInfo.brandId
       this.status = this.$route.params.status
       // debugger
       console.log(this.$route.params)
