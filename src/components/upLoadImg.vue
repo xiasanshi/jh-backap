@@ -35,8 +35,9 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui'
-export default {
+    import {Toast} from 'mint-ui'
+
+    export default {
   props: {
     src: { // 后台接受图片的http地址
       type: String,

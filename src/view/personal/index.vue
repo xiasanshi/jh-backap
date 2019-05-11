@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import {Toast, Indicator} from 'mint-ui'
-// import mUpLoader from '../../components/upLoadImg'
+    import {Indicator, Toast} from 'mint-ui'
+    // import mUpLoader from '../../components/upLoadImg'
 export default {
   name: 'index',
   data () {

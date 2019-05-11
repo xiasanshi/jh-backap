@@ -51,10 +51,10 @@
 </template>
 
 <script>
-import mUpLoader from '../../components/upLoadImg'
-import {Toast, Indicator} from 'mint-ui'
+    import mUpLoader from '../../components/upLoadImg'
+    import {Indicator, Toast} from 'mint-ui'
 
-export default {
+    export default {
   name: 'update',
   components: {
     mUpLoader

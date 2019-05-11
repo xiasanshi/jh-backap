@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
   <div class="app">
     <!--<mt-search style="height: auto;"
@@ -15,8 +16,7 @@
       </nav>
     </div>
     <div class="bg_ff" style="margin-top: 5px">
-      <div class="buss col-6 bg_ff" style="" v-for="item in pruducts"
-           @click="toShop(item.id)">
+      <div class="buss col-6 bg_ff" v-for="item in pruducts" @click="toShop(item.id)">
         <div style="padding-left:10px;padding-right: 10px;" class="bg_ff">
           <img v-lazy="`https://diancan.qingzhao.net.cn/diancanrs/api/image/${item.icon}`" class="width_100"
                style="height: 90px;">
@@ -35,9 +35,10 @@
 </template>
 
 <script>
-import mUpLoader from '../../components/upLoadImg'
-import {Toast, Indicator} from 'mint-ui'
-export default {
+    import mUpLoader from '../../components/upLoadImg'
+    import {Indicator, Toast} from 'mint-ui'
+
+    export default {
   name: 'add',
   components: {
     mUpLoader

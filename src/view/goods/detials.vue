@@ -37,10 +37,11 @@
 </template>
 
 <script>
-import mUpLoader from '../../components/upLoadImg'
-import {Toast, Indicator} from 'mint-ui'
-import axios from 'axios'
-export default {
+    import mUpLoader from '../../components/upLoadImg'
+    import {Indicator, Toast} from 'mint-ui'
+    import axios from 'axios'
+
+    export default {
   name: 'add',
   components: {
     mUpLoader

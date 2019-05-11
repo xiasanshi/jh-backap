@@ -34,9 +34,10 @@
 </template>
 
 <script>
-import mUpLoader from '../../components/upLoadImg'
-import {Toast, Indicator} from 'mint-ui'
-export default {
+    import mUpLoader from '../../components/upLoadImg'
+    import {Indicator, Toast} from 'mint-ui'
+
+    export default {
   name: 'add',
   components: {
     mUpLoader

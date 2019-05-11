@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Jhfooter from '../components/jhfoot'
-// import {JHWebSocket} from '../store/websocket'
+    import Jhfooter from '../components/jhfoot'
+    // import {JHWebSocket} from '../store/websocket'
 export default {
   components: {Jhfooter},
   data () {

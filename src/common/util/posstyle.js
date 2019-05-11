@@ -1,4 +1,5 @@
 import {Toast} from 'mint-ui'
+
 export const bold = (writer, flag) => {
   if (flag) {
     writer.write(0x1B)

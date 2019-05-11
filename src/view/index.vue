@@ -71,11 +71,11 @@
 </template>
 
 <script>
-import {Toast, Indicator} from 'mint-ui'
-import {PosMachine} from '../common/util/posstyle'
-import {JHWebSocket} from '../store/websocket'
+    import {Indicator, Toast} from 'mint-ui'
+    import {PosMachine} from '../common/util/posstyle'
+    import {JHWebSocket} from '../store/websocket'
 
-export default {
+    export default {
   name: 'index',
   data () {
     return {

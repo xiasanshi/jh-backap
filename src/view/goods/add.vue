@@ -42,10 +42,10 @@
 </template>
 
 <script>
-import mUpLoader from '../../components/upLoadImg'
-import {Toast, Indicator} from 'mint-ui'
+    import mUpLoader from '../../components/upLoadImg'
+    import {Indicator, Toast} from 'mint-ui'
 
-export default {
+    export default {
   name: 'add',
   components: {
     mUpLoader
@@ -101,6 +101,7 @@ export default {
       Indicator.open()
       this.api.connect('product')
       console.log(`创建商品${JSON.stringify(this.data)}`)
+      this.data.shopId = this.shopId
       this.api.create(this.data).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
@@ -116,7 +117,7 @@ export default {
     getClassfies () {
       Indicator.open()
       this.api.connect('category')
-      let param = {'shopId': this.data.shopId}
+      let param = {'shopId': this.shopId}
       this.api.getAll(param).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {

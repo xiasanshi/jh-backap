@@ -19,11 +19,11 @@
 </template>
 
 <script>
-// import store from '../store'
-import {requestLogin} from '../api/index'
-import {Indicator, Toast} from 'mint-ui'
+    // import store from '../store'
+    import {requestLogin} from '../api/index'
+    import {Indicator, Toast} from 'mint-ui'
 
-export default{
+    export default{
   data () {
     return {
       phone: 'admin',

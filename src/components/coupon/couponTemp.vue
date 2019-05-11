@@ -33,10 +33,10 @@
 </template>
 
 <script>
-import countDown from '../countDown'
-import wxjs from '../../common/wx'
+    import countDown from '../countDown'
+    import wxjs from '../../common/wx'
 
-export default {
+    export default {
   name: 'couponTemp',
   components: {countDown},
   data () {
