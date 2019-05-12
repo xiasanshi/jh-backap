@@ -12,7 +12,6 @@
           <h3>订单详情</h3>
           <p>订单号: {{item.id}}</p>
           <table class="width100">
-
             <tr class="width100" style="font-weight: bold">
               <td class="col-3">序号</td>
               <td class="col-3">商品</td>
@@ -26,15 +25,18 @@
               <td class="col-3">{{good.num}}</td>
             </tr>
           </table>
-          <div class="" style="padding:10px 0">
+          <div class="" style="padding:10px 0" v-if="item.hasOwnProperty('address') && item.address!=null">
             <div>合计: ￥{{item.repaymentAmount}}</div>
-            <div>地址: {{item.address.address}}</div>
-            <div>联系人: {{item.address.name}}</div>
-            <div>联系电话: <a v-bind:href="'tel:'+item.address.mobile"
-                          style="text-decoration: None">{{item.address.mobile}}</a></div>
+              <div  v-if="item.hasOwnProperty('address') && item.address!=null">
+                  <div>地址: {{item.address.address}}</div>
+                  <div>联系人: {{item.address.name}}</div>
+                  <div>联系电话: <a v-bind:href="'tel:'+item.address.mobile"
+                                style="text-decoration: None">{{item.address.mobile}}</a></div>
+              </div>
+
           </div>
         </div>
-        <div class="">
+        <div class="" v-if="item.shippingWays=='takeOut'">
           <div style="border-top: #999999 1px dashed;width: 100%" class="padding10"></div>
           <mt-button :disabled="status !== 'wait'" type="primary" size="small" @click="orderRecive(this, item)">接单
           </mt-button>
@@ -46,6 +48,10 @@
           <mt-button type="primary" size="small" @click="posOrder(this, item)">打印订单
           </mt-button>
           <!--<mt-button disabled="true"></mt-button>-->
+        </div>
+        <div v-else>
+            <mt-button type="primary" size="small" @click="posOrder(this, item)">打印订单
+            </mt-button>
         </div>
         <div class="position_absolute" style="right: 0;height: 100px;bottom: 4px" v-if="status==='complete'">
           <span class="icon iconfont icon-yiwancheng" style="width: 100%;font-size: 100px"></span>
@@ -129,9 +135,11 @@ export default {
       // out.write(0x1B)
       // out.write(97)
       // out.write(0)
-      this.writer.println(' 地址：' + data.address.address)
-      this.writer.println(' 联系人：' + data.address.name)
-      this.writer.println(' 联系电话：' + data.address.mobile)
+      if(data.shippingWays == 'takeOut'){
+          this.writer.println(' 地址：' + data.address.address)
+          this.writer.println(' 联系人：' + data.address.name)
+          this.writer.println(' 联系电话：' + data.address.mobile)
+      }
       this.pos.feedAndCut()
       // pos = null
       // writer = null
@@ -142,6 +150,13 @@ export default {
     posOrder (self, data) {
       if (this.pos === null) {
         Toast('打印链接失败，请检查。')
+      }
+      if(data.shippingStatus == 'wait'){
+          if(data.shippingWays == 'self'){
+              this.updaterOrder(data, 'alreadyShipping')
+          }else{
+              this.updaterOrder(data, 'noShipping')
+          }
       }
       this.updaterOrder(data, 'noShipping')
       if (!this.pos_flag) {
@@ -158,6 +173,7 @@ export default {
       this.posOrder(self, data)
     },
     refuseOrder (self, data) {
+      // self.updaterOrder()
       Toast('取消订单成功')
     },
     send2dada (self, data) {
@@ -173,10 +189,11 @@ export default {
       Indicator.open('加载中...')
       let para = {}
       para['shippingStatus'] = status
-      para['addressId'] = item.address.id
+      // para['addressId'] = item.address.id
       para['id'] = item.id
       para['shopId'] = item.shop.id
-      para['orderDetail'] = item.orderDetails
+      para['shippingWays'] = item.shippingWays
+      // para['orderDetail'] = item.orderDetails
       console.log(JSON.stringify(para))
       this.$api.connect('order')
       this.$api.create(para).then((res) => {

@@ -37,11 +37,11 @@
 </template>
 
 <script>
-    import mUpLoader from '../../components/upLoadImg'
-    import {Indicator, Toast} from 'mint-ui'
-    import axios from 'axios'
+import mUpLoader from '../../components/upLoadImg'
+import {Indicator, Toast} from 'mint-ui'
+import axios from 'axios'
 
-    export default {
+export default {
   name: 'add',
   components: {
     mUpLoader
@@ -102,7 +102,7 @@
       param['brandId'] = this.brandId
       param['status'] = this.good.status === 'onSale' ? 'offSale' : 'onSale'
       console.log(`修改商品${JSON.stringify(param)}`)
-      this.api.update(param).then(res => {
+      this.api.create(param).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
           Toast('创建商品成功')

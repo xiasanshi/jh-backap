@@ -51,10 +51,10 @@
 </template>
 
 <script>
-    import mUpLoader from '../../components/upLoadImg'
-    import {Indicator, Toast} from 'mint-ui'
+import mUpLoader from '../../components/upLoadImg'
+import {Indicator, Toast} from 'mint-ui'
 
-    export default {
+export default {
   name: 'update',
   components: {
     mUpLoader
@@ -104,7 +104,12 @@
       Indicator.open()
       this.api.connect('shop')
       console.log(`修改${JSON.stringify(this.data)}`)
-      let params = this.data
+      let params = {}
+      // for (let [k, v] of this.data) {
+      //   if (v) {
+      //     params[k] = v
+      //   }
+      // }
       params['id'] = this.shopId
       params['brandId'] = this.brandId
       if (this.open_time && this.close_time) {
@@ -113,7 +118,7 @@
         params['openTime'] = opentime
         params['closeTime'] = closetime
       }
-      this.api.reSave(params).then(res => {
+      this.api.create(params).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
           Toast('修改成功')

@@ -36,12 +36,12 @@ export class JHWebSocket {
   }
 
   open (message) {
-    let audio = document.createElement('audio')
-    audio.src = 'http://boscdn.bpc.baidu.com/v1/developer/daffd18a-1bbd-4f85-98a3-4e8d254eb102.mp3'
-    const playPromise = audio.play()
-    if (playPromise !== null) {
-      playPromise.catch(() => { audio.play() })
-    }
+    // let audio = document.createElement('audio')
+    // audio.src = 'http://boscdn.bpc.baidu.com/v1/developer/daffd18a-1bbd-4f85-98a3-4e8d254eb102.mp3'
+    // const playPromise = audio.play()
+    // if (playPromise !== null) {
+    //   playPromise.catch(() => { audio.play() })
+    // }
     // audio.play()
     // audio.play()
     // audio.play()

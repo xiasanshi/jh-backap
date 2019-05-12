@@ -34,10 +34,10 @@
 </template>
 
 <script>
-    import mUpLoader from '../../components/upLoadImg'
-    import {Indicator, MessageBox, Toast} from 'mint-ui'
+import mUpLoader from '../../components/upLoadImg'
+import {Indicator, MessageBox, Toast} from 'mint-ui'
 
-    export default {
+export default {
   name: 'classfy',
   components: {
     mUpLoader
@@ -69,7 +69,7 @@
       // alert('dddd')
       // console.log(this.data.type)
       // console.log(this.types)
-      if (!this.data.type || this.types.indexOf(this.data.type)) {
+      if (!this.data.type || this.types.indexOf(this.data.type) >= 0) {
         // console.log('======================')
         alert(`分类：${this.data.type}已经存在，不能重复创建`)
         return
@@ -97,7 +97,7 @@
       val['code'] = ''
       MessageBox.confirm('是否修改?').then(action => {
         Indicator.open()
-        this.api.update(val).then(res => {
+        this.api.create(val).then(res => {
           Indicator.close()
           if (res.data.code === '2000') {
             Toast('修改商品分类成功')

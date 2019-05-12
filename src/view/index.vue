@@ -71,11 +71,11 @@
 </template>
 
 <script>
-    import {Indicator, Toast} from 'mint-ui'
-    import {PosMachine} from '../common/util/posstyle'
-    import {JHWebSocket} from '../store/websocket'
+import {Indicator, Toast} from 'mint-ui'
+import {PosMachine} from '../common/util/posstyle'
+import {JHWebSocket} from '../store/websocket'
 
-    export default {
+export default {
   name: 'index',
   data () {
     return {
@@ -150,10 +150,11 @@
     }
   },
   updated () {
-    let w = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket')
     // w.reloadsocket()
   },
   created () {
+    let w = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket')
+
     // this.$websocket.reloadsocket()
   },
   filters: {
