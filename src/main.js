@@ -26,22 +26,22 @@ Vue.config.productionTip = true
 localStorage.setItem('bussnessId', '19b97965dd4e4495a0e741abf9372a83')
 
 Vue.prototype.$pos = false
-let url = 'https://diancan.qingzhao.net.cn/diancanrs/'
+let url = 'https://diancan.qingzhao.net.cn/diancanrs'
 Vue.prototype.$api = new Api(url)
 Vue.prototype.$miniapi = new MiniApp(url)
+Vue.prototype.$orderFlag = 0
 router.beforeEach((to, from, next) => {
-  console.log('main:' + next.name)
+  // console.log('main:' + next.name)
   if (to.path === '/login') {
-    sessionStorage.removeItem('shopInfo')
+    localStorage.removeItem('shopInfo')
   }
-  if (!sessionStorage.getItem('shopInfo') && to.path !== '/login') {
+  if (!localStorage.getItem('shopInfo') && to.path !== '/login') {
     next({path: '/login'})
   } else {
     next()
   }
 })
-// Vue.prototype.$websocket = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket') // websocket
-// Vue.prototype.$websocket = new JHWebSocket('ws://192.168.43.216:8082/fanZone/webSocket') // websocket
+
 /* eslint-disable no-new */
 new Vue({
   router,

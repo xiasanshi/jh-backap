@@ -115,8 +115,8 @@ export default {
     }
   },
   mounted () {
-    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
-    console.log(sessionStorage.getItem('shopInfo'))
+    let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
+    console.log(localStorage.getItem('shopInfo'))
     this.shopId = shopInfo.shopId
     console.log(this.shopId)
     this.brandId = shopInfo.brandId

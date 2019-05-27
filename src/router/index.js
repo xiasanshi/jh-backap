@@ -7,14 +7,16 @@ import Home from '@/view/Home'
 import personal from '@/view/personal/index'
 import goods from '@/view/goods/index'
 import goodDetials from '@/view/goods/detials'
+import goodUpdate from '@/view/goods/update'
 import addGood from '@/view/goods/add'
 import classfy from '@/view/classfy/index'
 import shopUpdate from '@/view/personal/update'
 
 Vue.use(Router)
 
+// mode 打包app要用hash模式
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/login',
@@ -22,9 +24,10 @@ export default new Router({
       component: login
     },
     {
-      path: '*',
+      path: '',
       redirect: {
-        name: 'index'
+        name: 'index',
+          path: '/index',
       }
     },
     {
@@ -54,7 +57,12 @@ export default new Router({
           path: '/goodDetials/:id',
           name: 'goodDetials',
           component: goodDetials
-        }, {
+        },{
+              path: '/good/update/:id',
+              name: 'update',
+              component: goodUpdate
+          },
+          {
           path: 'addGood',
           name: 'addGood',
           component: addGood

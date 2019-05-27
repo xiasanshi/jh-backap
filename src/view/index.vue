@@ -1,7 +1,7 @@
 <template>
   <div>
     <mt-header style="height: 50px" title="聚汇商家后台">
-      <mt-button icon="more" slot="right"></mt-button>
+<!--      <mt-button icon="more" slot="right"></mt-button>-->
     </mt-header>
     <div class="bg_snow today">
       <label style="">--今日收益--</label>
@@ -84,14 +84,28 @@ export default {
       popupVisible: false,
       pos_ip: '',
       pos_port: '',
-      pre_send: 10,
-      pos_connect: false
+      pre_send: 0,
+      pos_connect: false,
+      shopId: '',
+      brandId: '',
+      ws: '',
+      websocket: ''
     }
   },
   methods: {
+    connectWebsocket (id) {
+      if (this.websocket === '') {
+        console.log('shopid: ' + id)
+        this.websocket = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket', id)
+      } else {
+        this.websocket.reloadsocket()
+      }
+
+      this.ws = this.websocket.getWs()
+    },
     logout () {
       console.log('log out')
-      sessionStorage.removeItem('user')
+      localStorage.removeItem('user')
       this.$router.push('login')
     },
     runpop () {
@@ -103,6 +117,27 @@ export default {
       Toast('设置打印机ip成功。')
       this.popupVisible = false
     },
+    getTodayStat () {
+      this.$api.connect('checkBill')
+      let param = {}
+      param['shopId'] = this.shopId
+      param['durationText'] = 'oneDay'
+      param['dateType'] = 'hour'
+      param['orderStatus'] = 'complete'
+      // param['shoppingStatus'] = 'complete'
+      console.log('get stat: ' + JSON.stringify(param))
+      this.$api.getDataByName(param).then(res => {
+        if (res.data.code === '2000') {
+          let data = res.data.data
+          this.totalNum = data.totalNum
+          this.usedAmout = data.amount
+          Indicator.close()
+        } else {
+          Toast(res.msg)
+          Indicator.close()
+        }
+      })
+    },
     toRouter (url) {
       this.$router.push({name: url})
     },
@@ -110,7 +145,7 @@ export default {
       this.$router.push({name: 'orderOver', path: 'orderOver', params: {'status': status}})
     },
     runTest () {
-      Indicator.open()
+      // Indicator.open()
       if (this.pos_connect) {
         this.$pos.getPosHandle().println('测试打印')
       } else {
@@ -126,16 +161,22 @@ export default {
           Toast('打印机链接失败：' + e)
         }
       }
-      Indicator.close()
+      // Indicator.close()
     }
   },
   mounted () {
-    // this.testSocket()
-    console.log(this.$store.state.shopId)
     if (localStorage.getItem('posIp')) {
       this.pos_ip = localStorage.getItem('posIp')
     } else {
-      this.popupVisible = true
+      let u = navigator.userAgent
+      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+      if (isAndroid | isiOS) {
+        this.popupVisible = true
+      } else {
+        // Toast('web端')
+        console.log('打印机等待链接')
+      }
     }
     if (localStorage.getItem('posPort')) {
       this.pos_port = localStorage.getItem('posPort')
@@ -148,14 +189,19 @@ export default {
         this.pos_connect = true
       }
     }
+    let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
+    this.shopId = shopInfo.shopId
+    this.brandId = shopInfo.brandId
+    this.getTodayStat()
+    // this.connectWebsocket(this.shopId)
   },
   updated () {
     // w.reloadsocket()
   },
   created () {
-    let w = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket')
-
-    // this.$websocket.reloadsocket()
+    // let w = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket')
+  },
+  destroyed(){
   },
   filters: {
     is_connect (val) {

@@ -2,7 +2,7 @@
   <div>
     <div>
       <mt-header style="height: 50px" title="所有分类">
-        <router-link to="index" slot="left">
+        <router-link to="/index" slot="left">
           <mt-button icon="back">返回</mt-button>
         </router-link>
       </mt-header>
@@ -69,6 +69,7 @@ export default {
       // alert('dddd')
       // console.log(this.data.type)
       // console.log(this.types)
+      Indicator.open('正在创建')
       if (!this.data.type || this.types.indexOf(this.data.type) >= 0) {
         // console.log('======================')
         alert(`分类：${this.data.type}已经存在，不能重复创建`)
@@ -81,10 +82,12 @@ export default {
       this.api.create(this.data).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
+          Indicator.close()
           Toast('创建商品分类成功')
           this.popupVisible = false
           this.getClassfies()
         } else {
+            Indicator.close()
           Toast(res.data.msg)
         }
       })
@@ -135,8 +138,8 @@ export default {
     }
   },
   mounted () {
-    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
-    console.log(sessionStorage.getItem('shopInfo'))
+    let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
+    console.log(localStorage.getItem('shopInfo'))
     this.data.shopId = shopInfo.shopId
     this.data.brandId = shopInfo.brandId
     this.getClassfies()

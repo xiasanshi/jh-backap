@@ -1,7 +1,7 @@
 <template>
     <div>
       <mt-header style="height: 50px" :title="good.name">
-        <router-link to="index" slot="left">
+        <router-link to="/goods" slot="left">
           <mt-button icon="back">返回</mt-button>
         </router-link>
       </mt-header>
@@ -31,14 +31,14 @@
         </div>
       </div>
       <div class="width100 margin_top_10 padding10">
-        <mt-button type="primary" size="large" @click="updateProduct">{{good.status | format_good_status}}</mt-button>
+        <mt-button type="primary" size="large" @click="updatePre">{{good.status | format_good_status}}</mt-button>
       </div>
     </div>
 </template>
 
 <script>
 import mUpLoader from '../../components/upLoadImg'
-import {Indicator, Toast} from 'mint-ui'
+import {Indicator, Toast, MessageBox} from 'mint-ui'
 import axios from 'axios'
 
 export default {
@@ -93,19 +93,29 @@ export default {
       console.log(picker.getValues())
       this.data.categoryId = this.classfies[values[0]]
     },
+    updatePre () {
+      let s = this.good.status === 'onSale' ? '下架' : '上架'
+      MessageBox.confirm(`将要${s}商品，如果是，点击确定`).then(action => {
+        console.log('用户点击了确定')
+        this.updateProduct()
+      })
+    },
     updateProduct () {
       Indicator.open()
       this.api.connect('product')
-      let param = this.good
+      let param = {}
       param['id'] = this.goodId
-      param['shopId'] = this.shopId
-      param['brandId'] = this.brandId
+      // param['shopId'] = this.shopId
+      // param['brandId'] = this.brandId
+      let s = this.good.status === 'onSale' ? '下架' : '上架'
       param['status'] = this.good.status === 'onSale' ? 'offSale' : 'onSale'
+      // let s = this.good.status === 'onSale' ? '下架成功' : '上架成功'
       console.log(`修改商品${JSON.stringify(param)}`)
       this.api.create(param).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
-          Toast('创建商品成功')
+          Toast(s + '成功')
+          this.good = res.data.data
         } else {
           Toast(res.data.msg)
         }
@@ -156,7 +166,7 @@ export default {
     }
   },
   mounted () {
-    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
     this.shopId = shopInfo.shopId
     this.brandId = shopInfo.brandId
     this.goodId = this.$route.params.id

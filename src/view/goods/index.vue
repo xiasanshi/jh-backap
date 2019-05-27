@@ -16,18 +16,26 @@
       </nav>
     </div>
     <div class="bg_ff" style="margin-top: 5px">
-      <div class="buss col-6 bg_ff" v-for="item in pruducts" @click="toShop(item.id)">
-        <div style="padding-left:10px;padding-right: 10px;" class="bg_ff">
+      <div class="buss col-6 bg_ff" style="border-left:#CCCCCC 5px;margin-top: 1px;padding-bottom: 5px" v-for="item in pruducts" >
+        <div style="" class="bg_ff">
           <img v-lazy="`https://diancan.qingzhao.net.cn/diancanrs/api/image/${item.icon}`" class="width_100"
-               style="height: 90px;">
+               style="height: 100px;overflow: hidden;width: 100%">
         </div>
-        <div class="" style="padding-left:10px;padding-right: 10px;margin-bottom: 10px">
+        <div class="position_relative" style="padding-left:10px;padding-right: 10px;margin-bottom: 10px">
           <div class="bg_ff margin_top_10">
             <div class="color_333 overflow-hide"
                  style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{item.name}}
             </div>
-            {{item.price}} 元/kg
+            {{item.price}} 元/{{item.unit}}
           </div>
+            <div style="flex: row;margin-top: 5px;float:right">
+                <mt-button type="danger" size="small" style="padding-top: 2px" @click="toShop(item.id)">
+                    下架
+                </mt-button>
+                <mt-button type="primary" size="small" @click="toUpdate(item.id)">
+                    修改
+                </mt-button>
+            </div>
         </div>
       </div>
     </div>
@@ -79,6 +87,9 @@
     toShop (id) {
       this.$router.push({name: 'goodDetials', path: '/goodDetials', params: {'id': id}})
     },
+      toUpdate(id) {
+          this.$router.push({name: 'update', path: '/good/update', params: {'id': id}})
+      },
     onValuesChange (picker, values) {
       if (values[0] > values[1]) {
         picker.setSlotValue(1, values[0])
@@ -103,11 +114,16 @@
     getClassfies () {
       Indicator.open()
       this.api.connect('category')
-      let param = {'shopId': this.data.shopId}
+      let param = {'shopId': this.shopId}
       this.api.getAll(param).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
-          this.classfies = res.data.data
+          let data = res.data.data
+          data.forEach(item=>{
+              if(item.msg!=='NoProduct'){
+                  this.classfies.push(item)
+              }
+          })
           this.categoryId = this.classfies
           this.getPruducts(this.classfies[0].id)
         } else {
@@ -119,7 +135,7 @@
     getPruducts (typeId) {
       Indicator.open()
       this.api.connect('product')
-      let param = {'shopId': this.data.shopId, 'categoryId': typeId}
+      let param = {'shopId': this.shopId, 'categoryId': typeId, 'status':'onSale'}
       this.api.getAll(param).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
@@ -136,7 +152,7 @@
     }
   },
   mounted () {
-    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
     this.shopId = shopInfo.shopId
     this.brandId = shopInfo.brandId
     this.getClassfies()

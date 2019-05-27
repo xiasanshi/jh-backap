@@ -1,13 +1,15 @@
 <template>
   <div>
     <mt-header style="height: 50px" title="修改店铺信息">
-      <router-link to="index" slot="left">
+      <router-link to="/index" slot="left">
         <mt-button icon="back">返回</mt-button>
       </router-link>
     </mt-header>
     <mt-field label="名称：" placeholder="请输入名称" :state="data.name ? 'success' : 'error'" v-model="data.name"></mt-field>
     <mt-field label="联系电话：" placeholder="请输入联系方式" :state="data.mobile ? 'success' : 'error'" :attr="{ maxlength: 11 }" type="tel" v-model="data.mobile"></mt-field>
     <mt-field label="地址：" placeholder="请输入店铺地址" :state="data.address ? 'success' : 'error'" v-model="data.address"></mt-field>
+      <mt-field label="配送费：" placeholder="请输入配送费" :state="data.shippingPrice ? 'success' : 'error'" v-model="data.shippingPrice"></mt-field>
+      <mt-field label="起送金额：" placeholder="请输入最低起送金额" :state="data.basePrice ? 'success' : 'error'" v-model="data.basePrice"></mt-field>
     <!--<mt-field label="商品分类：">-->
     <mt-field label="店铺介绍：" type="textarea" placeholder="请输入店铺描述" rows="4" v-model="data.shopDesc"></mt-field>
     <mt-cell style="font-weight: bold" title="营业时间">
@@ -38,10 +40,10 @@
           <span class="color_fanzone"></span>
         </mt-cell>
         <m-up-loader :callback="getImg"></m-up-loader>
-        <mt-cell style="font-weight: bold" title="添加店铺描述图">
+       <!-- <mt-cell style="font-weight: bold" title="添加店铺描述图">
           <span class="">最多5张</span>
         </mt-cell>
-        <m-up-loader :callback="getImgs" :num="5"></m-up-loader>
+        <m-up-loader :callback="getImgs" :num="5"></m-up-loader>-->
       </div>
     </div>
     <div class="width100 margin_top_10 padding10">
@@ -105,13 +107,12 @@ export default {
       this.api.connect('shop')
       console.log(`修改${JSON.stringify(this.data)}`)
       let params = {}
-      // for (let [k, v] of this.data) {
-      //   if (v) {
-      //     params[k] = v
-      //   }
-      // }
+      for(let i in this.data){
+          params[i] = this.data[i]
+      }
       params['id'] = this.shopId
       params['brandId'] = this.brandId
+        console.log(`修改${JSON.stringify(params)}`)
       if (this.open_time && this.close_time) {
         let opentime = new Date(`1970-01-01 ${this.open_time}:00`)
         let closetime = new Date(`1970-01-01 ${this.close_time}:00`)
@@ -122,6 +123,7 @@ export default {
         Indicator.close()
         if (res.data.code === '2000') {
           Toast('修改成功')
+          this.shopInfo()
         } else {
           Toast(res.data.msg)
         }
@@ -167,7 +169,7 @@ export default {
     }
   },
   mounted () {
-    let shopInfo = JSON.parse(sessionStorage.getItem('shopInfo'))
+    let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
     this.shopId = shopInfo.shopId
     this.brandId = shopInfo.brandId
     this.shopInfo()

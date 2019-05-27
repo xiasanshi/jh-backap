@@ -3,7 +3,7 @@
     <div class="login color_fanzone">
       <div class="head">
         <!--<i class="icon-wangyi icon"></i>-->
-        <img src="../assets/logo.png" style="width: 100px;height: 100%;margin-top: 100px"/>
+        <img src="https://diancan.qingzhao.net.cn/logo.png" style="width: 100px;height: 100%;margin-top: 100px"/>
         <p class="title">聚汇商家</p>
         <p class="listen">&nbsp;做自己的平台！</p>
       </div>
@@ -19,15 +19,15 @@
 </template>
 
 <script>
-    // import store from '../store'
-    import {requestLogin} from '../api/index'
-    import {Indicator, Toast} from 'mint-ui'
+// import store from '../store'
+import {requestLogin} from '../api/index'
+import {Indicator, Toast} from 'mint-ui'
 
-    export default{
+export default{
   data () {
     return {
-      phone: 'admin',
-      password: 'admin@2019'
+      phone: '',
+      password: ''
     }
   },
   methods: {
@@ -36,7 +36,10 @@
       console.log('loading')
       if (this.phone !== '' && this.password !== '') {
         this.toLogin()
+      }else{
+          Toast('手机号或密码不能为空')
       }
+
     },
     // 登录请求
     toLogin () {
@@ -51,7 +54,7 @@
       // 请求后端,比如:
       requestLogin(loginParam).then((res) => {
         if (res.data.code === '2000') {
-          sessionStorage.setItem('shopInfo', JSON.stringify(res.data.data))
+          localStorage.setItem('shopInfo', JSON.stringify(res.data.data))
           // this.$store.actions.setShopId(res.data.data.shopId)
           console.log('xx')
           Indicator.close()

@@ -41,6 +41,10 @@ export class Api {
   delete (params) {
     return axios.delete(`${this.url}/api/${this.name}/${params.id}`, params)
   }
+
+  getDataByName (params) {
+    return axios.post(`${this.url}/api/${this.name}`, params)
+  }
 }
 
 export const requestLogin = params => {

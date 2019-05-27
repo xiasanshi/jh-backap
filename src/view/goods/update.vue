@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mt-header style="height: 50px" title="添加商品">
+        <mt-header style="height: 50px" title="修改商品">
             <router-link to="/index" slot="left">
                 <mt-button icon="back">返回</mt-button>
             </router-link>
@@ -28,15 +28,15 @@
                 <mt-cell style="font-weight: bold" title="添加商品展示图">
                     <span class="color_fanzone"></span>
                 </mt-cell>
-                <m-up-loader :callback="getImg"></m-up-loader>
-                <mt-cell style="font-weight: bold" title="添加商品描述图">
-                    <span class="">最多5张</span>
-                </mt-cell>
-                <m-up-loader :callback="getImgs" :num="5"></m-up-loader>
+                <m-up-loader :callback="getImg" :files_="icon"></m-up-loader>
+                <!--  <mt-cell style="font-weight: bold" title="添加商品描述图">
+                      <span class="">最多5张</span>
+                  </mt-cell>
+                  <m-up-loader :callback="getImgs" :files_="classy_icon" :num="5"></m-up-loader>-->
             </div>
         </div>
         <div class="width100 margin_top_10 padding10">
-            <mt-button type="primary" size="large" @click="createProduct">创建</mt-button>
+            <mt-button type="primary" size="large" @click="createProduct">确认修改</mt-button>
         </div>
     </div>
 </template>
@@ -44,27 +44,17 @@
 <script>
     import mUpLoader from '../../components/upLoadImg'
     import {Indicator, Toast} from 'mint-ui'
+    import axios from 'axios'
 
     export default {
-        name: 'add',
+        name: 'update',
         components: {
             mUpLoader
         },
         data () {
             return {
-                data: {
-                    'name': '',
-                    'price': '',
-                    'categoryId': '',
-                    'label': '',
-                    'description': '',
-                    'icon': '',
-                    'unit': 'kg',
-                    'shopId': '',
-                    'stock': 9999999,
-                    'brandId': '',
-                    'galleryList': []
-                },
+                data: {},
+                goodId: '',
                 slots: [{
                     flex: 1,
                     values: [],
@@ -79,7 +69,9 @@
                 }],
                 classfies: {},
                 labels: ['今日推荐', '店长推荐', '猜你喜欢', '预售'],
-                api: this.$api
+                api: this.$api,
+                icon: [],
+                classy_icon: []
             }
         },
         methods: {
@@ -97,13 +89,58 @@
                 console.log(picker.getValues())
                 this.data.label = picker.getValues()[0]
             },
+            getPruduct () {
+                Indicator.open()
+                this.api.connect('product')
+                let param = {'id': this.goodId}
+                this.api.getDetail(param).then(res => {
+                    Indicator.close()
+                    if (res.data.code === '2000') {
+                        this.data = res.data.data
+                        this.slots[0].values.push(this.data.category.type)
+                        let files = {
+                            'src': `https://diancan.qingzhao.net.cn/diancanrs/api/image/${this.data.icon}`,
+                            name: 'icon'
+                        }
+                        this.icon = [files]
+                        this.getGallaryImgs(this.data.gallery)
+                    } else {
+                        Toast(res.data.msg)
+                    }
+                })
+                Indicator.close()
+            },
+            getGallaryImgs (url) {
+                axios.post(url).then(res => {
+                    if (res.status === 200) {
+                        this.classy_icon = []
+                        res.data.forEach(item => {
+                            let files = {'src': item.imgUrl, 'name': '', 'file': item.imgUrl}
+                            // let files = new Image(item.imgUrl)
+                            // files.src = item.imgUrl
+                            console.log(files.file)
+                            this.classy_icon.push(files)
+                        })
+                    }
+                })
+            },
+            getBase64Image (img) {
+                let canvas = document.createElement('canvas')
+                canvas.width = 100
+                canvas.height = 100
+                let ctx = canvas.getContext('2d')
+                ctx.drawImage(img, 0, 0, 100, 100)
+                let ext = img.src.substring(img.src.lastIndexOf('.') + 1).toLowerCase()
+                let dataURL = canvas.toDataURL('image/' + ext)
+                return dataURL
+            },
             createProduct () {
                 this.api.connect('product')
                 this.data.shopId = this.shopId
-                if (!this.data.icon | this.data.icon === '') {
-                    Toast('请输入商品展示图片。')
-                    return
-                }
+                /* if (!this.data.icon | this.data.icon === '') {
+                     Toast('请输入商品展示图片。')
+                     return
+                 }*/
                 if (!this.data.name | this.data.name === '') {
                     Toast('请输入商品名称。')
                     return
@@ -112,15 +149,15 @@
                     Toast('请输入商品价格。')
                     return
                 }
-                if (!this.data.galleryList | this.data.galleryList.length === 0) {
-                    this.data.galleryList = [0]
-                }
+                // if (!this.data.galleryList | this.data.galleryList.length === 0) {
+                //     this.data.galleryList = [0]
+                // }
                 console.log(`创建商品${JSON.stringify(this.data)}`)
                 Indicator.open()
                 this.api.create(this.data).then(res => {
                     Indicator.close()
                     if (res.data.code === '2000') {
-                        Toast('创建商品成功')
+                        Toast('修改商品成功')
                         this.data = {'unit': 'kg', 'stock': 99999, 'galleryList': []}
                         // window.location.reload()
                         // this.data = {}
@@ -162,6 +199,8 @@
             this.shopId = shopInfo.shopId
             this.brandId = shopInfo.brandId
             this.getClassfies()
+            this.goodId = this.$route.params.id
+            this.getPruduct()
         },
         created () {
             // this.api = this.$api.connect('product')
