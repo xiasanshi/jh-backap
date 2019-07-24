@@ -80,14 +80,17 @@ export default {
       this.api.connect('product')
       this.data.shopId = this.shopId
       this.data.brandId = this.brandId
-      console.log(`创建商品${JSON.stringify(this.data)}`)
+      console.log(`创建分类${JSON.stringify(this.data)}`)
       this.api.create(this.data).then(res => {
         Indicator.close()
         if (res.data.code === '2000') {
-          Toast('创建商品成功')
+          Toast('创建分类成功')
         } else {
           Toast(res.data.msg)
         }
+      }).catch((res)=>{
+          Indicator.close()
+          Toast('创建分类失败，请检查您的网络，或者稍后重试。')
       })
       Indicator.close()
     },

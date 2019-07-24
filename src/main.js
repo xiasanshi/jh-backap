@@ -8,12 +8,10 @@ import store from './store'
 import './common/util/common_samplify.css'
 import './common/util/common.css'
 import './assets/scss/iconfont/iconfont.css'
-// import 'assets/scss/iconfont/iconfont.css'
 import VueWechatTitle from 'vue-wechat-title'
-// import {JHWebSocket} from './store/websocket'
 import {MiniApp} from './api/api'
 import {Api} from './api/index'
-// import {PosMachine} from './common/util/posstyle'
+import {Printer} from './common/util/printer'
 
 Vue.use(VueWechatTitle)
 
@@ -25,26 +23,28 @@ Vue.config.debug = true
 Vue.config.productionTip = true
 localStorage.setItem('bussnessId', '19b97965dd4e4495a0e741abf9372a83')
 
-Vue.prototype.$pos = false
+let printer = new Printer()
+Vue.prototype.$printer = printer
+console.log('run main')
 let url = 'https://diancan.qingzhao.net.cn/diancanrs'
 Vue.prototype.$api = new Api(url)
 Vue.prototype.$miniapi = new MiniApp(url)
 Vue.prototype.$orderFlag = 0
 router.beforeEach((to, from, next) => {
-  // console.log('main:' + next.name)
-  if (to.path === '/login') {
-    localStorage.removeItem('shopInfo')
-  }
-  if (!localStorage.getItem('shopInfo') && to.path !== '/login') {
-    next({path: '/login'})
-  } else {
-    next()
-  }
+    // console.log('main:' + next.name)
+    if (to.path === '/login') {
+        localStorage.removeItem('shopInfo')
+    }
+    if (!localStorage.getItem('shopInfo') && to.path !== '/login') {
+        next({path: '/login'})
+    } else {
+        next()
+    }
 })
 
 /* eslint-disable no-new */
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')

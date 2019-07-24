@@ -10,99 +10,99 @@ let url = 'https://pintuan.fanzone.vip/pintuanrs'
 // let xxx = ''
 
 export const requestLogin = params => {
-  return axios.post(`${base}/fanZone/bussiness/login`, qs.stringify(params))
+    return axios.post(`${base}/fanZone/bussiness/login`, qs.stringify(params))
 }
 
 export const getUserInfo = params => {
-  return axios.get(`${base}/fanZone/buyer/userInfo/tcUser`, {params: params})
+    return axios.get(`${base}/fanZone/buyer/userInfo/tcUser`, {params: params})
 }
 
 export const getUserInfoByCode = params => {
-  return axios.get(`${url}/wechat/xtoken`, {params: params})
+    return axios.get(`${url}/wechat/xtoken`, {params: params})
 }
 
 export const getAllGroupon = params => {
-  // alert('fff')
-  return axios.get(`${url}/groupon/findAll`, {params: params})
+    // alert('fff')
+    return axios.get(`${url}/groupon/findAll`, {params: params})
 }
 
 export const getAllGrouponByBusinessId = params => {
-  // alert('fff')
-  return axios.get(`${url}/groupon/list`, {params: params})
+    // alert('fff')
+    return axios.get(`${url}/groupon/list`, {params: params})
 }
 
 export const getGrouponDetails = params => {
-  return axios.get(`${url}/groupon/details`, {params: params})
+    return axios.get(`${url}/groupon/details`, {params: params})
 }
 
 export const getPreGrouponListByBusinessId = params => {
-  return axios.get(`${url}/team/getListByBusinessId`, {params: params})
+    return axios.get(`${url}/team/getListByBusinessId`, {params: params})
 }
 
 export const createPreGroupon = params => {
-  console.log(params)
-  return axios.get(`${url}/team/create`, {params: params})
+    console.log(params)
+    return axios.get(`${url}/team/create`, {params: params})
 }
 
 export const joinTeam = params => {
-  console.log(params)
-  return axios.get(`${url}/team/joinTeam`, {params: params})
+    console.log(params)
+    return axios.get(`${url}/team/joinTeam`, {params: params})
 }
 
 export const testPost = params => {
-  // alert(params)
-  return axios.get(`${url}/wechat/menu/default`, {params: params})
+    // alert(params)
+    return axios.get(`${url}/wechat/menu/default`, {params: params})
 }
 
 export const testPost1 = params => {
-  // alert(params)
-  return axios.put(`${url}/wechat/menu/default`, params)
+    // alert(params)
+    return axios.put(`${url}/wechat/menu/default`, params)
 }
 
 export const testPost2 = params => {
-  // alert(params)
-  return axios.post(`${url}/wechat/menu/default`, params)
+    // alert(params)
+    return axios.post(`${url}/wechat/menu/default`, params)
 }
 
 export const getTeamDetails = params => {
-  // alert(params)
-  return axios.get(`${url}/team/getDetails`, {params: params})
+    // alert(params)
+    return axios.get(`${url}/team/getDetails`, {params: params})
 }
 
 export const getTeamDetailsWithStatus = params => {
-  // alert(params)
-  return axios.get(`${url}/team/getDetailsWithStatus`, {params: params})
+    // alert(params)
+    return axios.get(`${url}/team/getDetailsWithStatus`, {params: params})
 }
 
 export const getTeamListByGroupId = params => {
-  // alert(params)
-  return axios.get(`${url}/team/getListByGroupId`, {params: params})
+    // alert(params)
+    return axios.get(`${url}/team/getListByGroupId`, {params: params})
 }
 
 export const getTeamListByBusinessId = params => {
-  // alert(params)
-  return axios.get(`${url}/team/getListByBusinessId`, {params: params})
+    // alert(params)
+    return axios.get(`${url}/team/getListByBusinessId`, {params: params})
 }
 
 export const getSMSCode = params => {
-  // alert(params)
-  return axios.get(`${url}/sms/${params.phone}/${params.openid}`)
+    // alert(params)
+    return axios.get(`${url}/sms/${params.phone}/${params.openid}`)
 }
 
 export const putPhone = params => {
-  // alert(params)
-  return axios.put(`${url}/user/${params.phone}/${params.openid}/${params.code}`)
+    // alert(params)
+    return axios.put(`${url}/user/${params.phone}/${params.openid}/${params.code}`)
 }
 
 export const getOrderList = params => {
-  // alert(params)
-  // return axios.post(`${url}/order/get/${params.openid}/${params.page}/${params.size}`, qs.stringify({'status': params.status}));
-  return axios.post(`${url}/order/${params.openid}/${params.page}/${params.size}`, qs.stringify({'status': params.status}))
+    // alert(params)
+    // return axios.post(`${url}/order/get/${params.openid}/${params.page}/${params.size}`, qs.stringify({'status': params.status}));
+    return axios.post(`${url}/order/${params.openid}/${params.page}/${params.size}`, qs.stringify({'status': params.status}))
 }
 
 export const rePay = params => {
-  // alert(params)
-  return axios.post(`${url}/order/repay/${params.orderNo}`)
+    // alert(params)
+    return axios.post(`${url}/order/repay/${params.orderNo}`)
 }
 
 /*
@@ -117,120 +117,134 @@ export class Fanzone {
     url = 'http://wx.qingzhao.net.cn'
 
     getAllBuss (params) {
-      return axios.get(`${this.url}/fanZone/buyer/bussiness/allBussiness`)
+        return axios.get(`${this.url}/fanZone/buyer/bussiness/allBussiness`)
     }
 
     getAllCoupon (params) {
-      return axios.get(`${this.url}/fanZone/buyer/coupon/allCoupon`)
+        return axios.get(`${this.url}/fanZone/buyer/coupon/allCoupon`)
     }
 
     getCouponDetail (params) {
-      // console.log("ffffffffffffffffff")
-      return axios.get(`${this.url}/fanZone/buyer/coupon/buyCoupon`, {params: params})
+        // console.log("ffffffffffffffffff")
+        return axios.get(`${this.url}/fanZone/buyer/coupon/buyCoupon`, {params: params})
     }
 
     payment (params) {
-      return axios.post(`${this.url}/fanZone/buyer/order/create`, qs.stringify(params))
+        return axios.post(`${this.url}/fanZone/buyer/order/create`, qs.stringify(params))
     }
 
     getCouponByBusinessId (params) {
-      return axios.get(`${this.url}/fanZone/buyer/coupon/couponListByBussinessId`, {params: params})
-      // http://wx.qingzhao.net.cn/fanZone/buyer/coupon/couponListByBussinessId?bussinessId=2962dba821474c4bb350df078907f66f
+        return axios.get(`${this.url}/fanZone/buyer/coupon/couponListByBussinessId`, {params: params})
+        // http://wx.qingzhao.net.cn/fanZone/buyer/coupon/couponListByBussinessId?bussinessId=2962dba821474c4bb350df078907f66f
     }
 
     getDynamic (params) {
-      return axios.get(`${this.url}/fanZone/buyer/dynamic/list`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/dynamic/list`, {params: params})
     }
 
     updatePhone (params) {
-      return axios.get(`${this.url}/fanZone/buyer/userInfo/updatePhone`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/userInfo/updatePhone`, {params: params})
     }
 
     getPhoneCode (params) {
-      return axios.get(`${this.url}/fanZone/buyer/sms/${params.phone}`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/sms/${params.phone}`, {params: params})
     }
 
     getUserInfo (params) {
-      return axios.get(`${this.url}/fanZone/buyer/userInfo/tcUser`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/userInfo/tcUser`, {params: params})
     }
 
     getUserInfoByCode (params) {
-      return axios.get(`${this.url}/fanZone/wechat/xtoken`, {params: params})
+        return axios.get(`${this.url}/fanZone/wechat/xtoken`, {params: params})
     }
 
     useCouponList (params) {
-      return axios.get(`${this.url}/fanZone/buyer/userCoupon/list`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/userCoupon/list`, {params: params})
     }
 
     prePay (params) {
-      return axios.get(`${this.url}/fanZone/buyer/order/unpay`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/order/unpay`, {params: params})
     }
 
     searchBussAndShop (params) {
-      return axios.get(`${this.url}/fanZone/buyer/bussiness/searchBussinessOrCoupon`, {params: params})
+        return axios.get(`${this.url}/fanZone/buyer/bussiness/searchBussinessOrCoupon`, {params: params})
     }
 
     testWXPay () {
-      let params = {
-        'appid': 'wx95721d88a471e1d1',
-        'mch_id': '1493595992',
-        'sub_mch_id': '1515303061',
-        'nonce_str': '',
-        'sign': '',
-        'sign_type': '',
-        'body': '聚汇0.1元优惠券'
+        let params = {
+            'appid': 'wx95721d88a471e1d1',
+            'mch_id': '1493595992',
+            'sub_mch_id': '1515303061',
+            'nonce_str': '',
+            'sign': '',
+            'sign_type': '',
+            'body': '聚汇0.1元优惠券'
 
-      }
-      return axios.post(`https://api.mch.weixin.qq.com/pay/unifiedorder`, {params: params})
+        }
+        return axios.post(`https://api.mch.weixin.qq.com/pay/unifiedorder`, {params: params})
     }
 }
+
 export class Provider {
     url = 'http://pay.qingzhao.net.cn/fanZone'
+
     pay (params) {
-      return axios.post(`${this.url}/wechat/providerPay`, params)
+        return axios.post(`${this.url}/wechat/providerPay`, params)
     }
 }
 
 export class MiniApp {
-  // url = 'http://10.168.23.140:8080/order/getOrders1?page=0&rows=10'
-  // url = 'https://diancan.qingzhao.net.cn/diancanrs/'
-  // test = 'http://192.168.0.106:8080/sellFruit'
-  constructor (url) {
-    this.url = url
-  }
-  getOrders (params) {
-    // alert(JSON.stringify(params))
-    return axios.get(`https://diancan.qingzhao.net.cn/diancanrs/order/getOrders1`, params)
-    // return axios.get('http://10.168.23.140:8085/order/getOrders1?page=0&rows=10')
-  }
-  createClassfy (params) {
-    return axios.put(`${this.url}/api/category`, params)
-  }
-  getClassfies (params) {
-    return axios.post(`${this.url}/api/category`, params)
-  }
-  delClassfies (params) {
-    return axios.post(`${this.url}/api/category/${params.id}`, params)
-  }
-  updateClassfies (params) {
-    return axios.post(`${this.url}/api/category/${params.id}`, params)
-  }
-  createPruduct (params) {
-    return axios.put(`${this.url}/api/product`, params)
-  }
-  getPruducts (params) {
-    return axios.post(`${this.url}/api/product/list`, params)
-  }
-  getPruductDetail (params) {
-    return axios.post(`${this.url}/api/product/${params.id}`, params)
-  }
-  getShopInfo (params) {
-    return axios.post(`${this.url}/api/shop/${params.id}`, params)
-  }
-  updateShopInfo (params) {
-    return axios.post(`${this.url}/api/shop/update`, params)
-  }
-  saveImage (params) {
-    return axios.post(`${this.url}/api/image/saveImage`, params, {headers: {'Content-Type': 'multipart/form-data'}})
-  }
+    // url = 'http://10.168.23.140:8080/order/getOrders1?page=0&rows=10'
+    // url = 'https://diancan.qingzhao.net.cn/diancanrs/'
+    // test = 'http://192.168.0.106:8080/sellFruit'
+    constructor (url) {
+        this.url = url
+    }
+
+    getOrders (params) {
+        // alert(JSON.stringify(params))
+        return axios.get(`https://diancan.qingzhao.net.cn/diancanrs/order/getOrders1`, params)
+        // return axios.get('http://10.168.23.140:8085/order/getOrders1?page=0&rows=10')
+    }
+
+    createClassfy (params) {
+        return axios.put(`${this.url}/api/category`, params)
+    }
+
+    getClassfies (params) {
+        return axios.post(`${this.url}/api/category`, params)
+    }
+
+    delClassfies (params) {
+        return axios.post(`${this.url}/api/category/${params.id}`, params)
+    }
+
+    updateClassfies (params) {
+        return axios.post(`${this.url}/api/category/${params.id}`, params)
+    }
+
+    createPruduct (params) {
+        return axios.put(`${this.url}/api/product`, params)
+    }
+
+    getPruducts (params) {
+        return axios.post(`${this.url}/api/product/list`, params)
+    }
+
+    getPruductDetail (params) {
+        return axios.post(`${this.url}/api/product/${params.id}`, params)
+    }
+
+    getShopInfo (params) {
+        return axios.post(`${this.url}/api/shop/${params.id}`, params)
+    }
+
+    updateShopInfo (params) {
+        return axios.post(`${this.url}/api/shop/update`, params)
+    }
+
+    saveImage (params) {
+        return axios.post(`${this.url}/api/image/saveImage`, params, {headers: {'Content-Type': 'multipart/form-data'}})
+        // return axios.post(`http://127.0.0.1:8999/upload/pic/test`, params, {headers: {'Content-Type': 'multipart/form-data'}})
+    }
 }

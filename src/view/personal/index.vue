@@ -25,10 +25,6 @@
             </mt-cell>
         </div>
 
-        <div style="margin-top: 5px" @click="runpop">
-            <mt-cell title="修改打印机ip" is-link>
-            </mt-cell>
-        </div>
         <div style="margin-top: 1px">
             <mt-cell title="修改店铺信息" :to="'shopUpdate'" is-link>
             </mt-cell>
@@ -40,19 +36,6 @@
         <div style="margin-top: 10px">
             <mt-cell title="退出登录" to="login" is-link></mt-cell>
         </div>
-        <mt-popup
-            v-model="popupVisible"
-            popup-transition="popup-fade"
-            position="runpop" style="width: 90%;">
-            <div class="padding10" style="width: 100%;">
-                <div class="width100 text_align_center"><h3 class="">设置打印机ip</h3></div>
-                <mt-field label="ip地址: " placeholder="请输入打印机ip地址" v-model="pos_ip"></mt-field>
-                <mt-field label="端口号: " type="number" placeholder="请输入打印机端口号" v-model="pos_port"></mt-field>
-                <div class="margin_top_10 padding_15">
-                    <mt-button size="large" type="primary" @click="updatePosIp">确定</mt-button>
-                </div>
-            </div>
-        </mt-popup>
     </div>
 </template>
 
@@ -81,15 +64,6 @@
                 console.log('log out')
                 localStorage.removeItem('user')
                 this.$router.push('login')
-            },
-            updatePosIp () {
-                localStorage.setItem('posIp', this.pos_ip)
-                localStorage.setItem('posPort', this.pos_port)
-                Toast('设置打印机ip成功。')
-                this.popupVisible = false
-            },
-            runpop () {
-                this.popupVisible = true
             },
             closeShop(){
                 MessageBox.confirm(`确定${this.shopstatus}，如果是，点击确定`).then(action => {
@@ -128,7 +102,10 @@
                     } else {
                         Toast(res.data.msg)
                     }
-                })
+                }).catch((res=>{
+                    Toast("┗|｀O′|┛ 嗷~~，网络奔溃了")
+                    Indicator.close()
+                }))
                 Indicator.close()
             },
             formatTime (val) {
@@ -164,24 +141,6 @@
             let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
             this.shopId = shopInfo.shopId
             this.brandId = shopInfo.brandId
-            if (localStorage.getItem('posIp')) {
-                this.pos_ip = localStorage.getItem('posIp')
-            } else {
-                let u = navigator.userAgent
-                let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
-                let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
-                if (isAndroid | isiOS) {
-                    this.popupVisible = true
-                } else {
-                    // Toast('web端')
-                    console.log('打印机等待链接')
-                }
-            }
-            if (localStorage.getItem('posPort')) {
-                this.pos_port = localStorage.getItem('posPort')
-            } else {
-                this.pos_port = 9100
-            }
             this.getInfo()
         },
         filters: {

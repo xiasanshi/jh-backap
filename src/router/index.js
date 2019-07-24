@@ -16,67 +16,67 @@ Vue.use(Router)
 
 // mode 打包app要用hash模式
 export default new Router({
-  mode: 'hash',
-  routes: [
-    {
-      path: '/login',
-      name: 'login',
-      component: login
-    },
-    {
-      path: '',
-      redirect: {
-        name: 'index',
-          path: '/index',
-      }
-    },
-    {
-      path: '/',
-      component: Home,
-      children: [
+    mode: 'hash',
+    routes: [
         {
-          path: '/index',
-          component: index,
-          name: 'index',
-          meta: {
-            title: '聚汇 - 修改手机号'
-          }
-        }, {
-          path: '/order/:status',
-          name: 'order',
-          component: order
-        }, {
-          path: '/personal',
-          name: 'personal',
-          component: personal
-        }, {
-          path: 'goods',
-          name: 'goods',
-          component: goods
-        }, {
-          path: '/goodDetials/:id',
-          name: 'goodDetials',
-          component: goodDetials
-        },{
-              path: '/good/update/:id',
-              name: 'update',
-              component: goodUpdate
-          },
-          {
-          path: 'addGood',
-          name: 'addGood',
-          component: addGood
-        }, {
-          path: 'classfy',
-          name: 'classfy',
-          component: classfy
-        }, {
-          path: 'shopUpdate',
-          name: 'shopUpdate',
-          component: shopUpdate
+            path: '/login',
+            name: 'login',
+            component: login
+        },
+        {
+            path: '',
+            redirect: {
+                name: 'index',
+                path: '/index',
+            }
+        },
+        {
+            path: '/',
+            component: Home,
+            children: [
+                {
+                    path: '/index',
+                    component: index,
+                    name: 'index',
+                    meta: {
+                        title: '聚汇 - 修改手机号'
+                    }
+                }, {
+                    path: '/order/:status',
+                    name: 'order',
+                    component: order
+                }, {
+                    path: '/personal',
+                    name: 'personal',
+                    component: personal
+                }, {
+                    path: 'goods',
+                    name: 'goods',
+                    component: goods
+                }, {
+                    path: '/goodDetials/:id',
+                    name: 'goodDetials',
+                    component: goodDetials
+                }, {
+                    path: '/good/update/:id',
+                    name: 'update',
+                    component: goodUpdate
+                },
+                {
+                    path: 'addGood',
+                    name: 'addGood',
+                    component: addGood
+                }, {
+                    path: 'classfy',
+                    name: 'classfy',
+                    component: classfy
+                }, {
+                    path: 'shopUpdate',
+                    name: 'shopUpdate',
+                    component: shopUpdate
+                }
+            ]
         }
-      ]
-    }
 
-  ]
+    ]
 })

@@ -65,16 +65,12 @@
                     </mt-button>
                     <mt-button type="primary" size="small" @click="posOrder(this, item)">打印订单
                     </mt-button>
-                    <!--<mt-button disabled="true"></mt-button>-->
                 </div>
                 <div v-else>
                     <div style="border-top: #999999 1px dashed;width: 100%" class="padding10"></div>
                     <mt-button type="primary" size="small" @click="posOrder(this, item)">打印订单
                     </mt-button>
                 </div>
-                <!--        <div class="position_absolute" style="right: 0;height: 100px;bottom: 4px" v-if="status==='complete'">-->
-                <!--          <span class="icon iconfont icon-yiwancheng" style="width: 100%;font-size: 100px"></span>-->
-                <!--        </div>-->
             </div>
         </div>
     </div>
@@ -82,7 +78,9 @@
 
 <script>
     import {PosMachine} from '../../common/util/posstyle'
+    import {Printer} from '../../common/util/printer'
     import {Indicator, Toast} from 'mint-ui'
+    import {createDelivery, cancelDelivery} from '../../api/index'
 
     // eslint-disable-next-line no-extend-native
     Array.prototype.remove = function (val) {
@@ -112,40 +110,34 @@
                 }],
                 data: [],
                 post_list: [],
-                pos_flag: true,
+                pos_flag: false,
                 pos: null,
                 writer: null,
                 miniapp: null,
                 shopId: '',
                 status: '',
                 title: '订单',
-                selected: 'wait'
+                selected: 'wait',
+                printer: null,
+                printer_obj: null
             }
         },
         methods: {
-            sendMess2Pos () {
-                console.log('ssssssss')
-                // this.pos_flag = true
-                if (this.pos === null | this.writer === null) {
-                    Toast('打印链接失败，请检查。')
-                    this.pos_flag = false
-                    return
-                }
+            async sendMess2Pos (callback) {
+                console.log('app log:pos start')
                 let data = this.post_list.shift()
                 console.log(`send data to pos: ${JSON.stringify(data)}`)
-                this.pos.feedAndCut()
-                this.pos.setAlign(1)
-                this.pos.setBold(true)
-                this.pos.setSize(17)
-                this.writer.println('订单详情')
-                this.pos.setAlign(0)
-                this.pos.setBold(false)
-                this.pos.setSize(0)
-                this.writer.println('')
-                this.writer.println(' 订单号 ' + data.id)
-                this.writer.println('---------------------------------------------')
-                this.writer.println('序号\t商品    \t数量\t单价\t金额')
-                this.writer.println('---------------------------------------------')
+
+                this.printer_obj.checkPrinterAvailable()
+                this.printer_obj.setFontSize(1)
+                this.printer_obj.printTextWithFont('订单详情\n', 0, 1)
+                this.printer_obj.printGBKText('\n')
+                this.printer_obj.setFontSize(0)
+                this.printer_obj.printGBKText('订单号 ' + data.id + '\n')
+
+                this.printer_obj.printGBKText('*******************************\n')
+                this.printer_obj.printGBKText('商品 x 数量\n')
+                this.printer_obj.printGBKText('-------------------------------\n')
                 for (let item in data.orderDetails) {
                     let good = data.orderDetails[item]
                     if (!item | item == undefined | item === 'remove') {
@@ -153,34 +145,30 @@
                     }
                     let tol = good.price * good.num
                     tol = tol.toFixed(2)
-                    this.writer.println(`${item}\t${good.productName}  \t${good.price}\t${good.num}\t${tol}`)
+                    this.printer_obj.printGBKText(`${good.productName} (￥${good.price} x${good.num} = ￥${tol})\n`)
                 }
-                this.writer.println('---------------------------------------------')
-                this.pos.setAlign(0)
-                this.writer.print(' 合计: ￥' + data.repaymentAmount)
+                this.printer_obj.printGBKText('*******************************\n')
+                // this.pos.setAlign(0)
+                this.printer_obj.printGBKText('合计: ￥' + data.repaymentAmount)
                 // out.write(0x1B)
                 // out.write(97)
                 // out.write(0)
                 if (data.shippingWays == 'takeOut') {
-                    this.writer.print(`  (包含配送费${data.shop.shippingPrice}元)\n`)
-                    this.writer.println(' 配送方式：外卖')
-                    this.writer.println(' 地址：' + data.address.address)
-                    this.writer.println(' 联系人：' + data.address.name)
-                    this.writer.println(' 联系电话：' + data.address.mobile)
+                    this.printer_obj.printGBKText(`(包含配送费${data.shop.shippingPrice}元)\n`)
+                    this.printer_obj.printGBKText('配送方式：外卖\n')
+                    this.printer_obj.printGBKText('地址：' + data.address.address + '\n')
+                    this.printer_obj.printGBKText('联系人：' + data.address.name + '\n')
+                    this.printer_obj.printGBKText('联系电话：' + data.address.mobile + '\n')
                 } else {
-                    this.writer.println(' 配送方式：自提')
+                    this.printer_obj.printGBKText('\n配送方式：自提\n')
                 }
-                this.pos.feedAndCut()
-                // pos = null
-                // writer = null
-                // this.data.remove(data)
-                Toast('打印成功')
+                this.printer_obj.printGBKText('\n\n\n')
                 this.pos_flag = false
+                Toast('打印成功')
+                console.log('app log:pos finish')
+                callback(this.pos_flag)
             },
             posOrder (self, data) {
-                if (this.pos === null) {
-                    Toast('打印链接失败，请检查。')
-                }
                 if (data.shippingStatus === 'wait') {
                     if (data.shippingWays === 'self') {
                         this.updaterOrder(data, 'alreadyShipping')
@@ -188,16 +176,15 @@
                         this.updaterOrder(data, 'noShipping')
                     }
                 }
-                // this.updaterOrder(data, 'noShipping')
+                this.post_list.push(data)
                 if (!this.pos_flag) {
-                    // this.pos_flag = true
-                    console.log('post data:pos_flag=true ' + JSON.stringify(this.post_list))
-                    this.post_list.push(data)
+                    console.log('post data:pos_flag=false ' + JSON.stringify(this.post_list))
+                    this.pos_flag = true
+                    this.sendMess2Pos()
 
                 } else {
-                    this.post_list.push(data)
-                    console.log('post data: ' + JSON.stringify(this.post_list))
-                    this.pos_flag = false
+                    console.log('post data:pos_flag=true  ' + JSON.stringify(this.post_list))
+                    // this.pos_flag = false
                     return true
                 }
             },
@@ -210,15 +197,8 @@
                 Toast('取消订单成功')
             },
             send2dada (self, data) {
-                this.updaterOrder(data, 'alreadyShipping')
-            },
-            async connect (ip, port) {
-                let self = this
-                self.$pos = new PosMachine(ip, parseInt(port))
-                self.writer = self.$pos.getPosHandle()
-                this.pos = self.$pos
-                this.writer = this.pos.getPosHandle()
-                // resolve(pos)
+                // this.updaterOrder(data, 'alreadyShipping')
+                this.create_delivery(data)
             },
             updaterOrder (item, status = 'noShipping') {
                 Indicator.open('加载中...')
@@ -265,8 +245,6 @@
                         Toast(res.msg)
                         Indicator.close()
                     }
-                    // console.log('==================')
-                    // console.log(JSON.stringify(this.data))
                 })
                 Indicator.close()
             },
@@ -277,26 +255,59 @@
             },
             formatTitle () {
                 self.title = this.status === 'complete' ? '已完成订单' : this.status === 'noShipping' ? '待发货订单' : this.status === 'alreadyShipping' ? '已发货订单' : this.status === 'wait' ? '待处理订单' : '订单'
+            },
+            create_delivery (item, callback_) {
+                let para = {'orderId': item.id}
+                Indicator.open('加载中...')
+                createDelivery(para).then((res) => {
+                    if (res.data.code === '2000') {
+                        Indicator.close()
+                        Toast('发货成功')
+                        // debugger
+                        callback_(item)
+
+                    } else {
+                        Indicator.close()
+                        Toast(res.msg)
+
+                    }
+                }).catch((res) => {
+                    Indicator.close()
+                    Toast('请检查您的网络，或者稍后重试。')
+                })
+            },
+            printer_callback (e) {
+                console.log('app log post' + e)
+            },
+            async connect_print () {
+                try {
+                    if (this.$printer.checkPrinter()) {
+                        console.log('app log: connect Printer')
+                        this.printer_obj = this.$printer.getPrinter()
+                    } else {
+                        console.log('app log: connect new Printer')
+                        console.log('app log: ' + this.$printer)
+                        this.$printer = new Printer()
+                        this.printer = this.$printer
+                        this.printer_obj = this.$printer.getPrinter()
+                    }
+
+                } catch (e) {
+                    Toast('链接打印机失败,请检查')
+                    console.log('链接打印机失败：' + e)
+                }
             }
         },
         created () {
             // console.log(this.$route.params.status)
-            try {
-                let ip = localStorage.getItem('posIp')
-                let port = localStorage.getItem('posPort')
-                if (this.$pos && this.$pos.getPosHandle() !== null) {
-                    this.pos = this.$pos
-                    this.writer = this.pos.getPosHandle()
-                } else {
-                    this.connect(ip, port)
-                }
-            } catch (e) {
-                Toast('链接打印机失败,请检查')
-                console.log('链接打印机失败：' + e)
-            }
+            // this.connect_print()
+        },
+        updated () {
+            this.connect_print()
         },
         mounted () {
             // this.$orderFlag = 0
+
             let shopInfo = JSON.parse(localStorage.getItem('shopInfo'))
             this.shopId = shopInfo.shopId
             this.brandId = shopInfo.brandId
@@ -308,17 +319,28 @@
             // debugger
             this.formatTitle()
             console.log(this.$orderFlag)
+
         },
         watch: {
             'pos_flag' (newp, oldp) {
-                console.log('pos_flag')
+                console.log('post_flag')
                 if (!newp && this.post_list.length > 0) {
                     this.pos_flag = true
                     // let data_ = newp[0]
-                    this.sendMess2Pos()
+                    try {
+                        this.sendMess2Pos(this.callback)
+                    } catch (e) {
+                        this.pos_flag = false
+                        Toast(e)
+                    }
                 } else {
                     console.log('post data: ' + JSON.stringify(this.post_list))
-                    this.pos_flag = true
+                    // try {
+                    //     this.sendMess2Pos()
+                    // } catch (e) {
+                    //     Toast(e)
+                    // }
+                    // this.pos_flag = true
                     return true
                 }
             },

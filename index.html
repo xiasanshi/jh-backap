@@ -5,40 +5,56 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>takeoutapp</title>
     <script>
-      document.addEventListener('plusready', function() {
-        var webview = plus.webview.currentWebview();
-        plus.key.addEventListener('backbutton', function() {
-          webview.canBack(function(e) {
-            if(e.canBack) {
-              webview.back();
-            } else {
-              //webview.close(); //hide,quit
-              //plus.runtime.quit();
-              //首页返回键处理
-              //处理逻辑：1秒内，连续两次按返回键，则退出应用；
-              var first = null;
-              plus.key.addEventListener('backbutton', function() {
-                //首次按键，提示‘再按一次退出应用’
-                if (!first) {
-                  first = new Date().getTime();
-                  console.log('再按一次退出应用');
-                  setTimeout(function() {
-                    first = null;
-                  }, 1000);
-                } else {
-                  if (new Date().getTime() - first < 1500) {
-                    plus.runtime.quit();
-                  }
+        // mui.init();
+        // 监听plusready事件
+        document.addEventListener("plusready", function() {
+            // 扩展API加载完毕，现在可以正常调用扩展API
+            // 获取客户端标识信息
+            var cid=plus.push.getClientInfo().clientid;
+            var count=0;
+            var getcid = setInterval(function() {
+                cid = plus.push.getClientInfo().clientid;
+                if(cid != "" && cid != null && cid != "null") {
+                    // mui.alert("cid=" + cid + "&count=" + count);
+                    console.log("cid=" + cid + "&count=" + count)
+                    clearInterval(getcid);
                 }
-              }, false);
-            }
-          })
-        });
-      });
+                count++;
+            }, 20);
+            //获得clientid，appid,appkey,token
+
+            // 监听在线消息事件,不符合格式的透传消息
+            plus.push.addEventListener("receive", function( msg ) {
+                mui.alert("接收到不符合格式在线透传消息："+JSON.stringify(msg) );
+                var options = {cover:false};
+                var str = '欢迎使用Html5 Plus创建本地消息！';//msg.content
+                plus.push.createMessage( str, "LocalMSG", options );
+                // mui.alert( "创建本地消息成功！" );
+                console.log("LocalMSG")
+                //本地消息上下两个payload不一样。
+            }, false );
+
+            // 监听点击消息事件,符合格式的透传消息或者本地消息
+            plus.push.addEventListener("click", function( msg ) {
+                // 判断是从本地创建还是离线推送的消息
+                mui.alert(JSON.stringify(msg) );
+                switch( msg.payload ) {
+                    case "LocalMSG":
+                        // mui.alert( "点击本地创建消息启动：" );//title和content里获得数据
+                        console.log("点击本地创建消息启动：" )
+                        break;
+                    default:
+                        // mui.alert( "点击符合格式的透传消息启动：");
+                        console.log("点击本地创建消息启动：")
+                        break;
+                }
+            }, false );
+        })
     </script>
   </head>
   <body>
     <div id="app"></div>
+
     <!-- built files will be auto injected -->
   </body>
 </html>

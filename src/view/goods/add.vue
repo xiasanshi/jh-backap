@@ -127,6 +127,9 @@
                     } else {
                         Toast(res.data.msg)
                     }
+                }).catch((res)=>{
+                    Indicator.close()
+                    Toast('创建商品失败，请检查您的网络，或者稍后重试。')
                 })
                 Indicator.close()
             },

@@ -86,6 +86,7 @@
                 if (this.websocket === '') {
                     console.log('shopid: ' + id)
                     this.websocket = new JHWebSocket('wss://pintuan.fanzone.vip/fanZone/webSocket', id, this.run_wb)
+                    this.websocket.websocket_test(this.websocket)
                 } else {
                     this.websocket.reloadsocket()
                 }
@@ -106,9 +107,9 @@
                         audio.play()
                     })
                 }
-                if(to.name === 'order'){
+                if(this.$route.name === 'order'){
                     this.orderNum = 0
-                    window.location.reload()
+                    // window.location.reload()
                 }
             },
             getOrderByStatus (status) {
@@ -140,11 +141,15 @@
             this.connectWebsocket(shop_info.shopId)
             this.toFooter()
             this.getOrderByStatus('noShipping')
+
+        },
+        updated(){
+
         },
         created () {
         },
         destroyed () {
-            console.log('destroyed websocket')
+            console.log('app log: destroyed websocket')
             this.ws.close()
         }
 

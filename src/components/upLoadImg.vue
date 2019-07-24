@@ -29,13 +29,13 @@
             </div>
         </section>
         <!-- 调用相机/图库 ref="file" 指定DOM节点 -->
-         <input type="file" accept="image/*" @change="fileChanged" ref="file" multiple="multiple">
-<!--         <input type="file" accept="image/*" @change="fileChanged" ref="file" capture="camera" multiple>-->
+        <input type="file" accept="image/*" @change="fileChanged" ref="file" multiple="multiple">
+        <!--         <input type="file" accept="image/*" @change="fileChanged" ref="file" capture="camera" multiple>-->
     </div>
 </template>
 
 <script>
-    import {Toast} from 'mint-ui'
+    import {Toast,Indicator} from 'mint-ui'
 
     export default {
         props: {
@@ -53,7 +53,7 @@
                 default: ''
             },
             files_: {
-                type: [Array,String],
+                type: [Array, String],
                 default: ''
             }
         },
@@ -65,7 +65,7 @@
                 percent: 0 // 上传进度
             }
         },
-        mounted(){
+        mounted () {
             // alert(this.files_)
             // this.files = this.files_
             // if(this.files_){
@@ -89,7 +89,9 @@
                 // const formData = new FormData()
                 this.uploading = true
                 var imgs = []
+                Indicator.open()
                 this.files.forEach((item) => {
+                    console.log(JSON.stringify(item))
                     let formData = new FormData()
                     formData.append('file', item.file)
                     // let param = item.src
@@ -105,8 +107,12 @@
                             console.log(`error：error code ${res.data.msg}`)
                             Toast(res.data.msg)
                         }
+                    }).catch((res)=>{
+                        Indicator.close()
+                        Toast('照片上传失败，请检查您的网络，或者稍后重试。')
                     })
                 })
+                Indicator.close()
                 console.log(imgs)
                 // this._callback(imgs)
                 // const xhr = new XMLHttpRequest()
@@ -125,6 +131,7 @@
                 // }
             },
             _callback (res) {
+                Indicator.close()
                 if (this.callback && this.callback instanceof Function) {
                     this.callback(res)
                 }
@@ -151,19 +158,85 @@
                             file: list[i]
                         }
                         // 转换图片格式
+                        if (list[i].size / 1024 > 100) {
+                            let _this = this
+                            const reader = new FileReader()
+                            reader.readAsDataURL(list[i])
+                            reader.onload = function () {
+                                var re = this.result
+                                _this.canvasDataURL(re, {quality: 0.2}, function (res) {
+                                    console.log('==========')
+                                    console.log(res)
+                                    // item.src = res
+                                    var arr = res.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                                        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n)
+                                    while (n--) {
+                                        u8arr[n] = bstr.charCodeAt(n)
+                                    }
+                                    // return
+                                    item.size = bstr.length
+                                    item.file = new Blob([u8arr], {type: mime})
+                                    item.src = res
+                                })
+                            }
+                        }
                         this.html5Reader(list[i], item)
                         this.files.push(item)
+
                     }
                 }
                 this.$refs.file.value = ''
             },
             // 将图片文件转成BASE64格式
             html5Reader (file, item) {
+                let _this = this
                 const reader = new FileReader()
                 reader.onload = (e) => {
+                    // console.log(e.target.result)
                     this.$set(item, 'src', e.target.result)
                 }
                 reader.readAsDataURL(file)
+                // reader.onload=function(){
+                //     var re=this.result;
+                //     _this.canvasDataURL(re,{quality: 0.2},_this.ysBack)
+                // }
+
+            },
+            canvasDataURL (path, obj, callback) {
+                var img = new Image()
+                console.log('压缩')
+                img.src = path
+                img.onload = function () {
+                    var that = this
+                    // 默认按比例压缩
+                    var w = that.width,
+                        h = that.height,
+                        scale = w / h
+                    w = obj.width || w
+                    h = obj.height || (w / scale)
+                    var quality = 0.7  // 默认图片质量为0.7
+                    //生成canvas
+                    var canvas = document.createElement('canvas')
+                    var ctx = canvas.getContext('2d')
+                    // 创建属性节点
+                    var anw = document.createAttribute('width')
+                    anw.nodeValue = w
+                    var anh = document.createAttribute('height')
+                    anh.nodeValue = h
+                    canvas.setAttributeNode(anw)
+                    canvas.setAttributeNode(anh)
+                    ctx.drawImage(that, 0, 0, w, h)
+                    // 图像质量
+                    if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+                        quality = obj.quality
+                    }
+                    // quality值越小，所绘制出的图像越模糊
+                    var base64 = canvas.toDataURL('image/jpeg', quality)
+                    // console.log(base64)
+                    // return base64
+                    // 回调函数返回base64的值
+                    callback(base64)
+                }
             },
             // 判断是否包含
             isContain (file) {
